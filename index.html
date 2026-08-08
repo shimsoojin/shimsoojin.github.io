@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Soojin Shim</title>
+<meta name="description" content="Soojin Shim — Product, Bear Robotics. Writing on robots, parenting, and everything in between.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-soft:#F6F6F7;
+    --text:#121316;
+    --text-soft:#6B7079;
+    --text-faint:#9CA0A8;
+    --border:#E7E7EA;
+    --accent:#1F3FE0;
+    --accent-soft:#EEF0FD;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:100px;
+    --maxw:600px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  .disp{font-family:'Inter Tight', 'Inter', sans-serif;}
+  a{color:inherit;}
+
+  header.topbar{
+    position:sticky; top:0; z-index:100;
+    background:rgba(255,255,255,.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 22px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{display:flex; flex-direction:column; text-decoration:none;}
+  .brand .name{font-size:15px; font-weight:700;}
+  .brand .role{font-size:12px; color:var(--text-soft);}
+  .topbar nav{display:flex; gap:20px;}
+  .topbar nav a{
+    font-size:13px; font-weight:500; text-decoration:none; color:var(--text-soft);
+  }
+  .topbar nav a:hover{color:var(--text);}
+
+  main{max-width:var(--maxw); margin:0 auto; padding:0 22px;}
+
+  /* ---- hero ---- */
+  .hero{padding:56px 0 40px;}
+  .hero h1{
+    font-size:clamp(32px,7.4vw,44px); line-height:1.16; letter-spacing:-.02em;
+    margin:0 0 18px; font-weight:800;
+  }
+  .hero p.lede{
+    font-size:16.5px; color:var(--text-soft); max-width:440px; margin:0 0 26px;
+  }
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-size:12.5px; font-weight:500; padding:7px 13px; border-radius:var(--radius-sm);
+    background:var(--bg-soft); border:1px solid var(--border); color:var(--text-soft);
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .chip .dot{width:6px; height:6px; border-radius:50%; background:#22C55E;}
+
+  /* ---- section label ---- */
+  .eyebrow{
+    font-size:11.5px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
+    color:var(--text-faint); margin:0 0 14px;
+  }
+  section{padding:38px 0;}
+  section + section{border-top:1px solid var(--border);}
+  .section-head{margin-bottom:22px;}
+  .section-head h2{font-size:23px; margin:0 0 6px; font-weight:700; letter-spacing:-.01em;}
+  .section-head p{font-size:14.5px; color:var(--text-soft); margin:0; max-width:420px;}
+
+  /* ---- writing cards ---- */
+  .write-grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  .write-card{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    text-decoration:none; color:var(--text);
+    background:var(--bg-soft); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:22px; transition:border-color .15s ease, background .15s ease;
+  }
+  .write-card:hover{background:#F0F0F2; border-color:#D9D9DE;}
+  .write-card .left{display:flex; align-items:flex-start; gap:14px;}
+  .write-icon{
+    width:42px; height:42px; border-radius:11px; flex-shrink:0;
+    background:var(--bg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .write-icon svg{width:20px; height:20px;}
+  .write-card h3{font-size:16.5px; margin:0 0 3px; font-weight:700;}
+  .write-card .sub{font-size:13.2px; color:var(--text-soft); margin:0;}
+  .write-card .lang-tag{
+    font-size:10.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:6px;
+    display:inline-block; margin-bottom:6px;
+  }
+  .cta-pill{
+    flex-shrink:0; display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; font-weight:600; padding:9px 14px; border-radius:var(--radius-sm);
+    background:var(--text); color:var(--bg); white-space:nowrap;
+  }
+  .cta-pill svg{width:12px; height:12px;}
+
+  .cadence-note{
+    display:flex; align-items:center; gap:8px; margin-top:18px;
+    font-size:12.5px; color:var(--text-faint);
+  }
+  .cadence-note svg{width:14px; height:14px; flex-shrink:0;}
+
+  /* ---- current list ---- */
+  .list{border-top:1px solid var(--border);}
+  .list-row{
+    display:flex; align-items:center; gap:14px; padding:18px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .avatar{
+    width:40px; height:40px; border-radius:10px; flex-shrink:0;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12.5px; font-weight:800; font-family:'Inter Tight',sans-serif;
+  }
+  .list-row .info{flex:1; min-width:0;}
+  .list-row .info h4{font-size:15px; margin:0 0 2px; font-weight:700;}
+  .list-row .info p{font-size:13px; color:var(--text-soft); margin:0;}
+  .visit-link{
+    flex-shrink:0; font-size:13px; font-weight:600; color:var(--text-soft);
+    text-decoration:none; display:inline-flex; align-items:center; gap:4px;
+  }
+  .visit-link:hover{color:var(--accent);}
+  .visit-link svg{width:11px; height:11px;}
+
+  /* ---- contact ---- */
+  .mentor-card{
+    background:var(--text); color:var(--bg);
+    border-radius:var(--radius-lg); padding:26px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    text-decoration:none; margin-bottom:16px;
+    transition:opacity .15s ease;
+  }
+  .mentor-card:hover{opacity:.92;}
+  .mentor-card .txt h3{font-size:18px; margin:0 0 6px; font-weight:700;}
+  .mentor-card .txt .status{
+    display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#C9CCD6;
+  }
+  .mentor-card .txt .status .dot{width:6px; height:6px; border-radius:50%; background:#4ADE80;}
+  .mentor-card .arrow{
+    width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.12);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .mentor-card .arrow svg{width:16px; height:16px;}
+
+  .li-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; border:1px solid var(--border); border-radius:var(--radius-md);
+    text-decoration:none; color:var(--text);
+  }
+  .li-row:hover{border-color:#D9D9DE; background:var(--bg-soft);}
+  .li-row .left{display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:500;}
+  .li-row .icon{
+    width:26px; height:26px; border-radius:7px; background:#0A66C2;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .li-row .icon svg{width:14px; height:14px;}
+  .li-row svg.chev{width:12px; height:12px; color:var(--text-faint);}
+
+  footer{
+    padding:36px 22px 48px; text-align:center;
+    font-size:12.5px; color:var(--text-faint);
+  }
+
+  @media (max-width:420px){
+    .topbar nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top">
+      <span class="name">Soojin Shim</span>
+      <span class="role">Product · Robotics</span>
+    </a>
+    <nav>
+      <a href="#writing">Writing</a>
+      <a href="#current">Current</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <h1 class="disp">I build robots, raise a kid, and write about both.</h1>
+    <p class="lede">Product thinker at Bear Robotics, based in the San Francisco Bay Area. This is the one place to find my writing, my current work, and how to get in touch.</p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span>Currently @ Bear Robotics</span>
+      <span class="chip">San Francisco Bay Area</span>
+      <span class="chip">New posts biweekly</span>
+    </div>
+  </section>
+
+  <section id="writing">
+    <div class="section-head">
+      <p class="eyebrow">Writing</p>
+      <h2 class="disp">A new post every two weeks</h2>
+      <p>On robots, parenting, daily life, and whatever else is on my mind.</p>
+    </div>
+
+    <div class="write-grid">
+      <a class="write-card" href="https://soojinshim.substack.com" target="_blank" rel="noopener">
+        <div class="left">
+          <div class="write-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v3H4V4zm0 5h16v2H4V9zm0 4h16v7l-8-4-8 4v-7z" fill="#121316"/></svg>
+          </div>
+          <div>
+            <span class="lang-tag">English</span>
+            <h3>Substack</h3>
+            <p class="sub">Robots, parenting, and everything in between</p>
+          </div>
+        </div>
+        <span class="cta-pill">Read now
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a class="write-card" href="https://brunch.co.kr/@soojinshim" target="_blank" rel="noopener">
+        <div class="left">
+          <div class="write-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v3H4V4zm0 5h16v2H4V9zm0 4h16v7l-8-4-8 4v-7z" fill="#121316"/></svg>
+          </div>
+          <div>
+            <span class="lang-tag">Korean</span>
+            <h3>Brunch</h3>
+            <p class="sub">The same stories, written in Korean</p>
+          </div>
+        </div>
+        <span class="cta-pill">Read now
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="cadence-note">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#9CA0A8" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="#9CA0A8" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Every other week — subscribe so you don't miss one
+    </div>
+  </section>
+
+  <section id="current">
+    <div class="section-head">
+      <p class="eyebrow">Current</p>
+      <h2 class="disp">What I'm doing now</h2>
+    </div>
+
+    <div class="list">
+      <div class="list-row">
+        <div class="avatar">BR</div>
+        <div class="info">
+          <h4>Bear Robotics</h4>
+          <p>Product · Full-time</p>
+        </div>
+        <a class="visit-link" href="https://www.bearrobotics.ai" target="_blank" rel="noopener">
+          Visit
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="list-row">
+        <div class="avatar">MIT</div>
+        <div class="info">
+          <h4>MIT Professional Education</h4>
+          <p>Certificate, Robotics &amp; AI</p>
+        </div>
+        <a class="visit-link" href="https://professional.mit.edu" target="_blank" rel="noopener">
+          Visit
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="list-row" style="border-bottom:none;">
+        <div class="avatar">SF</div>
+        <div class="info">
+          <h4>San Francisco Bay Area</h4>
+          <p>Based here, open to remote work</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-head">
+      <p class="eyebrow">Contact</p>
+      <h2 class="disp">Let's talk</h2>
+      <p>Open to conversations on career, robotics, and product.</p>
+    </div>
+
+    <a class="mentor-card" href="https://cal.com/soojinshim" target="_blank" rel="noopener">
+      <div class="txt">
+        <h3>Book mentorship</h3>
+        <span class="status"><span class="dot"></span>Open for bookings</span>
+      </div>
+      <span class="arrow">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M18 6H9M18 6V15" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <a class="li-row" href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">
+      <span class="left">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" fill="#FFFFFF"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        </span>
+        LinkedIn
+      </span>
+      <svg class="chev" viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Soojin Shim
+</footer>
+
+</body>
+</html>
