@@ -10,14 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FBFAF6;
-    --bg-soft:#F3F1EA;
-    --text:#17140F;
-    --text-soft:#7A756A;
-    --text-faint:#ACA79B;
-    --border:#E7E3D9;
-    --border-strong:#D7D2C4;
-    --accent:#3D5A45;
+    --bg:#1A2B3D;
+    --bg-soft:#22374C;
+    --text:#F2ECDD;
+    --text-soft:#AEA79A;
+    --text-faint:#6E7A8C;
+    --border:rgba(242,236,221,.12);
+    --border-strong:rgba(242,236,221,.22);
+    --accent:#E0A857;
     --radius-lg:16px;
     --radius-md:10px;
     --maxw:600px;
@@ -30,8 +30,8 @@
     color:var(--text);
     font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing:antialiased;
-    line-height:1.5;
-    font-size:15px;
+    line-height:1.6;
+    font-size:15.5px;
     overflow-x:hidden;
   }
   a{color:inherit;}
@@ -39,65 +39,108 @@
   .serif-i{font-family:'Instrument Serif', Georgia, serif; font-style:italic; color:var(--accent);}
 
   .grain{
-    position:fixed; inset:0; z-index:900; pointer-events:none; opacity:.035; mix-blend-mode:multiply;
+    position:fixed; inset:0; z-index:900; pointer-events:none; opacity:.035; mix-blend-mode:screen;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 
-  /* ---- ambient gradient blob ---- */
+  /* ---- a single warm glow, like a harbor light against the night ---- */
   .blob{
-    position:absolute; top:-160px; right:-140px; width:480px; height:480px;
-    background:radial-gradient(circle at 30% 30%, #E8A33D 0%, transparent 60%),
-               radial-gradient(circle at 70% 70%, #3D5A45 0%, transparent 55%);
-    filter:blur(70px); opacity:.28; mix-blend-mode:multiply;
+    position:absolute; top:-150px; right:-120px; width:480px; height:480px;
+    background:radial-gradient(circle, rgba(224,168,87,.4) 0%, transparent 65%);
+    filter:blur(90px); opacity:.55; mix-blend-mode:screen;
     pointer-events:none; z-index:0;
-    animation:drift 22s ease-in-out infinite alternate;
+    animation:drift 26s ease-in-out infinite alternate;
   }
   @keyframes drift{
     0%{transform:translate(0,0) scale(1);}
-    100%{transform:translate(-24px,26px) scale(1.06);}
+    100%{transform:translate(-26px,24px) scale(1.08);}
   }
   .hero{position:relative;}
+
+  /* ---- snow: three depth layers, natural sway, fades out of the reading zone ---- */
+  .snow{
+    position:fixed; inset:0; z-index:50; pointer-events:none; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to bottom, black 0%, black 32%, rgba(0,0,0,.35) 55%, transparent 78%);
+    mask-image:linear-gradient(to bottom, black 0%, black 32%, rgba(0,0,0,.35) 55%, transparent 78%);
+  }
+  .flake{
+    position:absolute; top:-6vh; border-radius:50%; background:#FFFFFF;
+    animation-timing-function:linear; animation-iteration-count:infinite;
+  }
+  .flake-far{filter:blur(1px); animation-name:fallFar;}
+  .flake-mid{filter:blur(.4px); animation-name:fallMid;}
+  .flake-near{animation-name:fallNear;}
+  .flake-spark{
+    box-shadow:0 0 6px 1px rgba(255,255,255,.8), 0 0 14px 3px rgba(224,168,87,.35);
+  }
+  @keyframes fallFar{
+    0%{transform:translate(0,0); opacity:0;}
+    10%{opacity:.32;}
+    50%{transform:translate(10px,56vh);}
+    90%{opacity:.24;}
+    100%{transform:translate(-6px,112vh); opacity:0;}
+  }
+  @keyframes fallMid{
+    0%{transform:translate(0,0) rotate(0deg); opacity:0;}
+    10%{opacity:.55;}
+    30%{transform:translate(14px,34vh) rotate(40deg);}
+    60%{transform:translate(-10px,67vh) rotate(-30deg);}
+    90%{opacity:.42;}
+    100%{transform:translate(8px,112vh) rotate(20deg); opacity:0;}
+  }
+  @keyframes fallNear{
+    0%{transform:translate(0,0) rotate(0deg); opacity:0;}
+    8%{opacity:.9;}
+    28%{transform:translate(-18px,31vh) rotate(-35deg);}
+    55%{transform:translate(16px,62vh) rotate(45deg);}
+    82%{transform:translate(-12px,90vh) rotate(-20deg);}
+    92%{opacity:.7;}
+    100%{transform:translate(10px,112vh) rotate(10deg); opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flake{animation:none; display:none;}
+    .blob{animation:none;}
+  }
 
   /* ---- headline entrance ---- */
   .hero h1{opacity:0; animation:fadeUp .7s ease forwards;}
   .hero .lede, .hero .meta-row{opacity:0; animation:fadeUp .7s ease forwards; animation-delay:.14s;}
   .hero .meta-row{animation-delay:.24s;}
   @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
-
   @media (prefers-reduced-motion: reduce){
-    .blob{animation:none;}
     .hero h1, .hero .lede, .hero .meta-row{animation:none; opacity:1;}
   }
 
 main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-index:1;}
 
   /* ---- hero ---- */
-  .hero{padding:min(14vh,110px) 0 44px;}
+  .hero{padding:min(15vh,116px) 0 56px;}
   .hero h1{
-    font-size:clamp(30px,8.8vw,58px); line-height:1.1; letter-spacing:-.01em;
+    font-size:clamp(30px,8.8vw,56px); line-height:1.12; letter-spacing:-.01em;
     margin:0 0 22px; font-weight:400;
   }
   .hero p.lede{
     font-size:16px; color:var(--text-soft); max-width:420px; margin:0 0 26px; line-height:1.65;
   }
   .hero p.lede strong{color:var(--text); font-weight:600;}
-  .meta-row{display:flex; flex-wrap:wrap; gap:7px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px;}
   .chip{
-    font-size:12px; font-weight:500; padding:6px 12px; border-radius:100px;
-    background:var(--bg); border:1px solid var(--border); color:var(--text-soft);
+    font-size:12px; font-weight:500; padding:6px 13px; border-radius:100px;
+    background:rgba(242,236,221,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--border); color:var(--text-soft);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
     display:inline-flex; align-items:center; gap:6px;
   }
 
   /* ---- section label ---- */
   .eyebrow{
-    font-size:11px; font-weight:600; letter-spacing:.09em; text-transform:uppercase;
-    color:var(--text-faint); margin:0 0 12px;
+    font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 13px;
   }
-  section{padding:52px 0;}
-  section + section{border-top:1px solid var(--border);}
-  .section-head{margin-bottom:26px;}
-  .section-head h2{font-size:26px; margin:0 0 6px; font-weight:400; letter-spacing:-.005em;}
-  .section-head p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:400px;}
+  section{padding:66px 0;}
+  .section-head{margin-bottom:28px;}
+  .section-head h2{font-size:25px; margin:0 0 7px; font-weight:400; letter-spacing:-.005em; line-height:1.3;}
+  .section-head p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:400px; line-height:1.6;}
 
   /* ---- writing: numbered list ---- */
   .write-list{border-top:1px solid var(--border);}
@@ -117,55 +160,66 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
     color:var(--text-faint); display:block; margin-bottom:4px;
   }
-  .write-row h3{font-size:19px; margin:0 0 3px; font-weight:400; font-family:'Instrument Serif',serif;}
+  .write-row h3{font-size:18.5px; margin:0 0 3px; font-weight:400; font-family:'Instrument Serif',serif;}
   .write-row .sub{font-size:13px; color:var(--text-soft); margin:0;}
   .write-row .arrow{
-    flex-shrink:0; width:32px; height:32px; border-radius:50%;
-    border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
-    transition:transform .25s ease, background .2s ease, border-color .2s ease;
+    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    background:rgba(242,236,221,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--border);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 2px 10px rgba(0,0,0,.18);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .25s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
   }
-  .write-row:hover .arrow{transform:translateX(3px); background:var(--text); border-color:var(--text);}
+  .write-row:hover .arrow{
+    transform:translateX(3px);
+    background:var(--accent); border-color:var(--accent);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 4px 16px rgba(224,168,87,.35);
+  }
   .write-row .arrow svg{width:12px; height:12px; transition:stroke .2s ease;}
   .write-row:hover .arrow svg{stroke:var(--bg);}
 
-  .cadence-note{
-    display:flex; align-items:center; gap:7px; margin-top:20px;
-    font-size:12px; color:var(--text-faint);
-  }
-  .cadence-note svg{width:13px; height:13px; flex-shrink:0;}
-
-  /* ---- now (single feature, not a list) ---- */
+  /* ---- now / working-on cards ---- */
   .now-card{
     border:1px solid var(--border); border-radius:var(--radius-lg);
-    padding:26px; background:var(--bg-soft);
+    padding:24px; background:rgba(242,236,221,.045);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 24px rgba(0,0,0,.16);
     display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    transition:border-color .2s ease;
   }
-  .now-card .info h3{font-size:20px; margin:0 0 6px; font-weight:400; font-family:'Instrument Serif',serif;}
-  .now-card .info p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:340px; line-height:1.6;}
+  .now-card:hover{border-color:var(--border-strong);}
+  .now-card + .now-card{margin-top:14px;}
+  .now-card .info h3{font-size:18px; margin:0 0 7px; font-weight:400; font-family:'Instrument Serif',serif;}
+  .now-card .info p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:360px; line-height:1.65;}
   .now-card .visit{
     flex-shrink:0; font-size:12.5px; font-weight:500; color:var(--text-soft);
     text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:2px;
   }
-  .now-card .visit:hover{color:var(--text);}
+  .now-card .visit:hover{color:var(--accent);}
   .now-card .visit svg{width:10px; height:10px;}
 
+  /* ---- contact list ---- */
   .li-row{
     display:flex; align-items:center; justify-content:space-between;
     padding:13px 16px; border:1px solid var(--border); border-radius:var(--radius-md);
-    text-decoration:none; color:var(--text);
+    background:rgba(242,236,221,.04); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    text-decoration:none; color:var(--text); margin-top:14px;
+    transition:border-color .2s ease;
   }
   .li-row:hover{border-color:var(--border-strong);}
   .li-row .left{display:flex; align-items:center; gap:9px; font-size:13px; font-weight:500;}
   .li-row .icon{
-    width:22px; height:22px; border-radius:6px; background:var(--bg-soft); border:1px solid var(--border);
+    width:22px; height:22px; border-radius:7px; background:rgba(242,236,221,.06); border:1px solid var(--border);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
     display:flex; align-items:center; justify-content:center;
   }
   .li-row .icon svg{width:12px; height:12px;}
   .li-row svg.chev{width:10px; height:10px; color:var(--text-faint);}
 
   footer{
-    padding:36px 22px 48px; text-align:center;
-    font-size:12px; color:var(--text-faint);
+    padding:44px 22px 56px; text-align:center;
+    font-size:12px; color:var(--text-faint); line-height:1.7;
   }
 
   .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
@@ -179,12 +233,39 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
 </head>
 <body>
 <div class="grain"></div>
+<div class="snow">
+  <span class="flake flake-far" style="left:3%; width:2px; height:2px; animation-duration:22s; animation-delay:0s;"></span>
+  <span class="flake flake-far" style="left:16%; width:2px; height:2px; animation-duration:26s; animation-delay:6s;"></span>
+  <span class="flake flake-far" style="left:29%; width:1.5px; height:1.5px; animation-duration:24s; animation-delay:12s;"></span>
+  <span class="flake flake-far" style="left:41%; width:2px; height:2px; animation-duration:28s; animation-delay:3s;"></span>
+  <span class="flake flake-far" style="left:53%; width:1.5px; height:1.5px; animation-duration:23s; animation-delay:16s;"></span>
+  <span class="flake flake-far" style="left:64%; width:2px; height:2px; animation-duration:27s; animation-delay:9s;"></span>
+  <span class="flake flake-far" style="left:76%; width:1.5px; height:1.5px; animation-duration:25s; animation-delay:19s;"></span>
+  <span class="flake flake-far" style="left:88%; width:2px; height:2px; animation-duration:29s; animation-delay:2s;"></span>
+  <span class="flake flake-far" style="left:96%; width:1.5px; height:1.5px; animation-duration:24s; animation-delay:14s;"></span>
+
+  <span class="flake flake-mid" style="left:8%; width:3.5px; height:3.5px; animation-duration:15s; animation-delay:1s;"></span>
+  <span class="flake flake-mid" style="left:22%; width:3px; height:3px; animation-duration:17s; animation-delay:7s;"></span>
+  <span class="flake flake-mid" style="left:35%; width:3.5px; height:3.5px; animation-duration:14s; animation-delay:4s;"></span>
+  <span class="flake flake-mid" style="left:48%; width:3px; height:3px; animation-duration:18s; animation-delay:11s;"></span>
+  <span class="flake flake-mid" style="left:60%; width:3.5px; height:3.5px; animation-duration:16s; animation-delay:2s;"></span>
+  <span class="flake flake-mid" style="left:71%; width:3px; height:3px; animation-duration:19s; animation-delay:13s;"></span>
+  <span class="flake flake-mid" style="left:83%; width:3.5px; height:3.5px; animation-duration:15s; animation-delay:8s;"></span>
+  <span class="flake flake-mid" style="left:93%; width:3px; height:3px; animation-duration:17s; animation-delay:5s;"></span>
+
+  <span class="flake flake-near" style="left:12%; width:5.5px; height:5.5px; animation-duration:10s; animation-delay:0s;"></span>
+  <span class="flake flake-near flake-spark" style="left:26%; width:6px; height:6px; animation-duration:9s; animation-delay:5s;"></span>
+  <span class="flake flake-near" style="left:44%; width:5px; height:5px; animation-duration:11s; animation-delay:2s;"></span>
+  <span class="flake flake-near" style="left:58%; width:5.5px; height:5.5px; animation-duration:9.5s; animation-delay:7s;"></span>
+  <span class="flake flake-near flake-spark" style="left:74%; width:6px; height:6px; animation-duration:10.5s; animation-delay:3s;"></span>
+  <span class="flake flake-near" style="left:90%; width:5px; height:5px; animation-duration:10s; animation-delay:6s;"></span>
+</div>
 
 <main id="top">
 
   <section class="hero">
     <div class="blob"></div>
-    <h1>Robots by day.<br><span class="serif-i">Kids</span> by night.</h1>
+    <h1><span class="serif-i">Robots</span> by day.<br>Kids by night.</h1>
     <p class="lede">I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once both are asleep, I try to make sense of it — and keep an honest record as I go.</p>
     <div class="meta-row">
       <span class="chip">San Francisco Bay Area</span>
@@ -200,15 +281,15 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     </div>
 
     <div class="write-list">
-      <a class="write-row reveal" href="https://soojinshim.substack.com" target="_blank" rel="noopener">
+      <a class="write-row reveal" href="https://soojinshim.substack.com">
         <span class="num">01</span>
         <span class="body">
           <span class="lang-tag">English</span>
-          <h3>Substack</h3>
-          <p class="sub">Robots, parenting, everything in between</p>
+          <h3>Not a Robot Newsletter</h3>
+          <p class="sub">Human thoughts on robots, parenting, and everything in between</p>
         </span>
         <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#17140F"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
 
@@ -220,21 +301,16 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
           <p class="sub">The same stories, written in Korean</p>
         </span>
         <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#17140F"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-    </div>
-
-    <div class="cadence-note">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#ACA79B" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="#ACA79B" stroke-width="1.6" stroke-linecap="round"/></svg>
-      A new one lands every other week
     </div>
   </section>
 
   <section id="now">
     <div class="section-head">
       <p class="eyebrow">Now</p>
-      <h2>What I'm building</h2>
+      <h2>What I'm working on</h2>
       <p>How things that move on their own quietly enter our lives, and whether that's for the better. It's the thread running through everything I've worked on so far.</p>
     </div>
 
@@ -247,6 +323,13 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
         Visit
         <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+    </div>
+
+    <div class="now-card reveal">
+      <div class="info">
+        <h3>Mentoring</h3>
+        <p>Supporting graduate founders in the U.S. and Korea, through partnerships with their schools.</p>
+      </div>
     </div>
   </section>
 
@@ -265,7 +348,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
           <p class="sub">For companies &amp; schools</p>
         </span>
         <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#17140F"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
 
@@ -276,7 +359,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
           <p class="sub">30 min · 1:1, by request</p>
         </span>
         <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#17140F"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
 
@@ -287,7 +370,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
           <p class="sub">Email your question, anytime</p>
         </span>
         <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#17140F"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
     </div>
@@ -295,7 +378,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     <a class="li-row" href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">
       <span class="left">
         <span class="icon">
-          <svg viewBox="0 0 24 24" fill="#17140F"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#F2ECDD"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
         </span>
         LinkedIn
       </span>
