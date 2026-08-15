@@ -55,7 +55,7 @@
   .lang-toggle button{
     border:none; background:transparent; color:var(--text-soft);
     font-family:'Inter', sans-serif; font-size:11.5px; font-weight:600; letter-spacing:.02em;
-    padding:6px 13px; border-radius:100px; cursor:pointer;
+    padding:8px 13px; min-height:32px; border-radius:100px; cursor:pointer;
     transition:background .2s ease, color .2s ease;
   }
   .lang-toggle button.active{background:var(--accent); color:var(--bg);}
@@ -244,6 +244,25 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     font-size:12px; color:var(--text-faint); line-height:1.8;
   }
 
+  /* ---- snow drift at the very bottom, with a twinkle or two ---- */
+  .snow-drift{
+    position:relative; width:100vw; margin-left:calc(50% - 50vw);
+    height:40px; margin-top:-6px; overflow:hidden; pointer-events:none;
+  }
+  .snow-drift svg{width:100%; height:100%; display:block;}
+  .sparkle{
+    position:absolute; border-radius:50%;
+    background:#FFFFFF; box-shadow:0 0 7px 2px rgba(255,255,255,.55);
+    animation:twinkle 4.4s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.1; transform:scale(.55);}
+    50%{opacity:.85; transform:scale(1.15);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sparkle{animation:none; opacity:.45;}
+  }
+
   .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
   .reveal.in{opacity:1; transform:translateY(0);}
   @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none;}}
@@ -251,6 +270,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
   @media (max-width:420px){
     .now-card{flex-direction:column;}
     .lang-toggle{top:12px; right:12px;}
+    .lang-toggle button{padding:9px 14px; font-size:12px;}
   }
 </style>
 </head>
@@ -260,6 +280,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
 <div class="lang-toggle">
   <button type="button" data-lang="en" class="active">EN</button>
   <button type="button" data-lang="ko">한글</button>
+  <button type="button" data-lang="es">ES</button>
 </div>
 
 <div class="snow">
@@ -295,7 +316,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
   <section class="hero">
     <div class="blob"></div>
     <h1 data-i18n="hero_h1"><span class="serif-i">Robots</span> by day.<br>Kids by night.</h1>
-    <p class="lede" data-i18n="hero_lede">I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once both are asleep, I try to make sense of it — and keep an honest record as I go.</p>
+    <p class="lede" data-i18n="hero_lede">I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once they're asleep, I write it down.</p>
     <div class="meta-row">
       <span class="chip" data-i18n="chip1">San Francisco Bay Area</span>
       <span class="chip" data-i18n="chip2">New posts biweekly</span>
@@ -340,7 +361,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     <div class="section-head">
       <p class="eyebrow" data-i18n="now_eyebrow">Now</p>
       <h2 data-i18n="now_h2">What I'm working on</h2>
-      <p data-i18n="now_p">How things that move on their own quietly enter our lives, and whether that's for the better. It's the thread running through everything I've worked on so far.</p>
+      <p data-i18n="now_p">How autonomous things enter our lives — and whether that's for the better.</p>
     </div>
 
     <div class="now-card reveal">
@@ -357,7 +378,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
     <div class="now-card reveal">
       <div class="info">
         <h3 data-i18n="now2_title">Mentoring</h3>
-        <p data-i18n="now2_p">Supporting graduate founders in the U.S. and Korea, through partnerships with their schools.</p>
+        <p data-i18n="now2_p">Supporting graduate founders in the U.S. and Korea, through their schools.</p>
       </div>
     </div>
   </section>
@@ -373,6 +394,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
       <a class="write-row" target="_blank" rel="noopener"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Speaking%20inquiry&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20a%20bit%20about%20what%20we%20have%20in%20mind%3A%0D%0A%0D%0AOrganization%3A%0D%0AEvent%20date%20%2B%20format%3A%0D%0ATopic%20we're%20interested%20in%3A%0D%0A%0D%0ALooking%20forward%20to%20connecting!"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%EA%B0%95%EC%97%B0%20%EB%AC%B8%EC%9D%98&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EB%85%BC%EC%9D%98%ED%95%98%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EB%82%B4%EC%9A%A9%EC%9D%84%20%EA%B0%84%EB%8B%A8%ED%9E%88%20%EB%82%A8%EA%B2%A8%EC%A3%BC%EC%84%B8%EC%9A%94%3A%0D%0A%0D%0A%EC%86%8C%EC%86%8D%20%EA%B8%B0%EA%B4%80%3A%0D%0A%ED%96%89%EC%82%AC%20%EC%9D%BC%EC%A0%95%20%EB%B0%8F%20%ED%98%95%EC%8B%9D%3A%0D%0A%EA%B4%80%EC%8B%AC%20%EC%9E%88%EB%8A%94%20%EC%A3%BC%EC%A0%9C%3A%0D%0A%0D%0A%EC%97%B0%EB%9D%BD%20%EA%B8%B0%EB%8B%A4%EB%A6%AC%EA%B2%A0%EC%8A%B5%EB%8B%88%EB%8B%A4!"
+        data-href-es="mailto:soojinshim.design@gmail.com?subject=Consulta%20de%20charla&body=Hola%20Soojin%2C%0D%0A%0D%0AUn%20poco%20sobre%20lo%20que%20tenemos%20en%20mente%3A%0D%0A%0D%0AOrganizaci%C3%B3n%3A%0D%0AFecha%20y%20formato%20del%20evento%3A%0D%0ATema%20de%20inter%C3%A9s%3A%0D%0A%0D%0A%C2%A1Espero%20que%20podamos%20conectar!"
         href="mailto:soojinshim.design@gmail.com?subject=Speaking%20inquiry&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20a%20bit%20about%20what%20we%20have%20in%20mind%3A%0D%0A%0D%0AOrganization%3A%0D%0AEvent%20date%20%2B%20format%3A%0D%0ATopic%20we're%20interested%20in%3A%0D%0A%0D%0ALooking%20forward%20to%20connecting!">
         <span class="body">
           <span class="lang-tag" data-i18n="row3_tag">Speaking</span>
@@ -387,6 +409,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
       <a class="write-row" target="_blank" rel="noopener"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Mentorship%20request%20(Professional)&body=Hi%20Soojin%2C%0D%0A%0D%0AA%20bit%20about%20me%20and%20what%20I'd%20love%20to%20chat%20about%3A%0D%0A%0D%0AName%3A%0D%0AWhat%20I'd%20like%20to%20talk%20through%3A%0D%0A%0D%0AThanks%20so%20much!"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%EB%A9%98%ED%86%A0%EC%8B%AD%20%EC%9A%94%EC%B2%AD%20(%EC%A7%81%EC%9E%A5%EC%9D%B8)&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EA%B0%84%EB%8B%A8%ED%95%9C%20%EC%86%8C%EA%B0%9C%EC%99%80%20%EC%9D%B4%EC%95%BC%EA%B8%B0%20%EB%82%98%EB%88%84%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EC%A3%BC%EC%A0%9C%EB%A5%BC%20%EB%82%A8%EA%B2%A8%EC%A3%BC%EC%84%B8%EC%9A%94%3A%0D%0A%0D%0A%EC%9D%B4%EB%A6%84%3A%0D%0A%EC%9D%B4%EC%95%BC%EA%B8%B0%ED%95%98%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EC%A3%BC%EC%A0%9C%3A%0D%0A%0D%0A%EA%B0%90%EC%82%AC%ED%95%A9%EB%8B%88%EB%8B%A4!"
+        data-href-es="mailto:soojinshim.design@gmail.com?subject=Solicitud%20de%20mentor%C3%ADa%20(Profesional)&body=Hola%20Soojin%2C%0D%0A%0D%0AUn%20poco%20sobre%20m%C3%AD%20y%20de%20qu%C3%A9%20me%20encantar%C3%ADa%20hablar%3A%0D%0A%0D%0ANombre%3A%0D%0ATema%20que%20me%20gustar%C3%ADa%20conversar%3A%0D%0A%0D%0A%C2%A1Muchas%20gracias!"
         href="mailto:soojinshim.design@gmail.com?subject=Mentorship%20request%20(Professional)&body=Hi%20Soojin%2C%0D%0A%0D%0AA%20bit%20about%20me%20and%20what%20I'd%20love%20to%20chat%20about%3A%0D%0A%0D%0AName%3A%0D%0AWhat%20I'd%20like%20to%20talk%20through%3A%0D%0A%0D%0AThanks%20so%20much!">
         <span class="body">
           <span class="lang-tag" data-i18n="row4_tag">Paid</span>
@@ -401,6 +424,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
       <a class="write-row" target="_blank" rel="noopener"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Student%20question&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20my%20question%3A%0D%0A%0D%0A"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%ED%95%99%EC%83%9D%20%EC%A7%88%EB%AC%B8&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EC%A7%88%EB%AC%B8%20%EB%82%A8%EA%B9%81%EB%8B%88%EB%8B%A4%3A%0D%0A%0D%0A"
+        data-href-es="mailto:soojinshim.design@gmail.com?subject=Pregunta%20de%20estudiante&body=Hola%20Soojin%2C%0D%0A%0D%0AAqu%C3%AD%20va%20mi%20pregunta%3A%0D%0A%0D%0A"
         href="mailto:soojinshim.design@gmail.com?subject=Student%20question&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20my%20question%3A%0D%0A%0D%0A">
         <span class="body">
           <span class="lang-tag" data-i18n="row5_tag">Free</span>
@@ -427,9 +451,30 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
 </main>
 
 <footer>
-  <span data-i18n="footer_line">If any of this helps someone move forward, that's reason enough to keep going.</span><br>
+  <span data-i18n="footer_line">If this helps someone move forward, that's enough.</span><br>
   © 2026 Soojin Shim
 </footer>
+
+<div class="snow-drift">
+  <svg viewBox="0 0 1200 44" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="snowBack" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E4EDF3"/>
+        <stop offset="100%" stop-color="#C7D5E1"/>
+      </linearGradient>
+      <linearGradient id="snowFront" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FFFFFF"/>
+        <stop offset="100%" stop-color="#DCE7EF"/>
+      </linearGradient>
+    </defs>
+    <path d="M0,44 L0,22 C260,15 420,27 600,20 C820,12 980,24 1200,17 L1200,44 Z" fill="url(#snowBack)" opacity=".5"/>
+    <path d="M0,44 L0,15 C300,25 520,9 760,18 C940,25 1060,13 1200,20 L1200,44 Z" fill="url(#snowFront)" opacity=".96"/>
+  </svg>
+  <span class="sparkle" style="left:16%; bottom:15px; width:2.5px; height:2.5px; animation-delay:0s;"></span>
+  <span class="sparkle" style="left:38%; bottom:21px; width:2px; height:2px; animation-delay:1.6s;"></span>
+  <span class="sparkle" style="left:62%; bottom:13px; width:3px; height:3px; animation-delay:.8s;"></span>
+  <span class="sparkle" style="left:83%; bottom:18px; width:2px; height:2px; animation-delay:2.4s;"></span>
+</div>
 
 <script>
   const els = document.querySelectorAll('.reveal');
@@ -441,70 +486,81 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
   const translations = {
     hero_h1: {
       en: '<span class="serif-i">Robots</span> by day.<br>Kids by night.',
-      ko: '<span class="serif-i">로봇은</span> 낮에.<br>육아는 밤에.'
+      ko: '<span class="serif-i">로봇은</span> 낮에.<br>육아는 밤에.',
+      es: '<span class="serif-i">Robots</span> de día.<br>Hijos de noche.'
     },
     hero_lede: {
-      en: "I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once both are asleep, I try to make sense of it — and keep an honest record as I go.",
-      ko: "안녕하세요, 심수진입니다. <strong>Bear Robotics에서 프로덕트를 만들고</strong>, 두 아이를 키우고 있어요. 아이들이 잠든 밤이면 하루를 정리하며, 솔직하게 기록을 남깁니다."
+      en: "I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once they're asleep, I write it down.",
+      ko: "안녕하세요, 심수진입니다. <strong>Bear Robotics에서 프로덕트를 만들고</strong>, 두 아이를 키우고 있어요. 아이들이 잠들면, 그날의 이야기를 씁니다.",
+      es: "Soy Soojin — <strong>construyo producto en Bear Robotics</strong> y soy madre de dos. La mayoría de las noches, cuando se duermen, lo escribo."
     },
-    chip1: { en: "San Francisco Bay Area", ko: "샌프란시스코 베이 에어리어" },
-    chip2: { en: "New posts biweekly", ko: "격주 연재 중" },
-    writing_eyebrow: { en: "Writing", ko: "글쓰기" },
+    chip1: { en: "San Francisco Bay Area", ko: "샌프란시스코 베이 에어리어", es: "Bahía de San Francisco" },
+    chip2: { en: "New posts biweekly", ko: "격주 연재 중", es: "Publico cada dos semanas" },
+    writing_eyebrow: { en: "Writing", ko: "글쓰기", es: "Escritura" },
     writing_h2: {
       en: 'New thoughts, <span class="serif-i">every</span> other week',
-      ko: '<span class="serif-i">격주로</span> 찾아오는 새로운 생각'
+      ko: '<span class="serif-i">격주로</span> 찾아오는 새로운 생각',
+      es: 'Ideas nuevas, <span class="serif-i">cada</span> dos semanas'
     },
     writing_p: {
       en: "Robots, parenting, and the questions I'm still working out.",
-      ko: "로봇, 육아, 그리고 아직 답을 찾지 못한 질문들."
+      ko: "로봇, 육아, 그리고 아직 답을 찾지 못한 질문들.",
+      es: "Robots, crianza, y las preguntas que todavía no resuelvo."
     },
-    row1_tag: { en: "English", ko: "English" },
-    row1_title: { en: "Not a Robot Newsletter", ko: "Not a Robot Newsletter" },
+    row1_tag: { en: "English", ko: "English", es: "Inglés" },
+    row1_title: { en: "Not a Robot Newsletter", ko: "Not a Robot Newsletter", es: "Not a Robot Newsletter" },
     row1_sub: {
       en: "Human thoughts on robots, parenting, and everything in between",
-      ko: "로봇을 만들지만, 결국 쓰는 건 사람 이야기입니다"
+      ko: "로봇을 만들지만, 결국 쓰는 건 사람 이야기입니다",
+      es: "Pensamientos humanos sobre robots, crianza, y todo lo que hay en medio"
     },
-    row2_tag: { en: "Korean", ko: "한국어" },
-    row2_title: { en: "Brunch", ko: "브런치" },
+    row2_tag: { en: "Korean", ko: "한국어", es: "Coreano" },
+    row2_title: { en: "Brunch", ko: "브런치", es: "Brunch" },
     row2_sub: {
       en: "The same stories, written in Korean",
-      ko: "같은 이야기를, 한국어로 씁니다"
+      ko: "같은 이야기를, 한국어로 씁니다",
+      es: "Las mismas historias, en coreano"
     },
-    now_eyebrow: { en: "Now", ko: "지금" },
-    now_h2: { en: "What I'm working on", ko: "지금 하고 있는 일" },
+    now_eyebrow: { en: "Now", ko: "지금", es: "Ahora" },
+    now_h2: { en: "What I'm working on", ko: "지금 하고 있는 일", es: "En qué estoy trabajando" },
     now_p: {
-      en: "How things that move on their own quietly enter our lives, and whether that's for the better. It's the thread running through everything I've worked on so far.",
-      ko: "스스로 움직이는 것들이 우리 삶에 조용히 들어오는 방식, 그리고 그게 정말 더 나은 방향인지. 지금까지 해온 모든 일을 관통하는 질문입니다."
+      en: "How autonomous things enter our lives — and whether that's for the better.",
+      ko: "스스로 움직이는 것들이 우리 삶에 어떻게 들어오는지, 그리고 그게 정말 더 나은 방향인지.",
+      es: "Cómo las cosas autónomas entran en nuestras vidas — y si eso es para mejor."
     },
-    now1_title: { en: "Bear Robotics", ko: "Bear Robotics" },
-    now1_p: { en: "Product, full-time.", ko: "프로덕트 · 풀타임" },
-    now1_visit: { en: "Visit", ko: "바로가기" },
-    now2_title: { en: "Mentoring", ko: "멘토링" },
+    now1_title: { en: "Bear Robotics", ko: "Bear Robotics", es: "Bear Robotics" },
+    now1_p: { en: "Product, full-time.", ko: "프로덕트 · 풀타임", es: "Producto, tiempo completo." },
+    now1_visit: { en: "Visit", ko: "바로가기", es: "Visitar" },
+    now2_title: { en: "Mentoring", ko: "멘토링", es: "Mentoría" },
     now2_p: {
-      en: "Supporting graduate founders in the U.S. and Korea, through partnerships with their schools.",
-      ko: "미국과 한국의 대학원생 창업자들을, 소속 학교와 연계해 지원하고 있습니다."
+      en: "Supporting graduate founders in the U.S. and Korea, through their schools.",
+      ko: "미국과 한국의 대학원생 창업자들을, 소속 학교를 통해 지원하고 있습니다.",
+      es: "Apoyo a fundadores de posgrado en Estados Unidos y Corea, a través de sus universidades."
     },
-    contact_eyebrow: { en: "Contact", ko: "연락" },
+    contact_eyebrow: { en: "Contact", ko: "연락", es: "Contacto" },
     contact_h2: {
       en: 'Let\'s <span class="serif-i">talk</span>',
-      ko: '<span class="serif-i">이야기</span> 나눠요'
+      ko: '<span class="serif-i">이야기</span> 나눠요',
+      es: '<span class="serif-i">Hablemos</span>'
     },
     contact_p: {
       en: "Talks on career growth, robotics, product, and working motherhood.",
-      ko: "커리어 성장, 로보틱스, 프로덕트, 그리고 일하는 엄마의 삶에 대해 이야기합니다."
+      ko: "커리어 성장, 로보틱스, 프로덕트, 그리고 일하는 엄마의 삶에 대해 이야기합니다.",
+      es: "Charlas sobre crecimiento profesional, robótica, producto, y maternidad y trabajo."
     },
-    row3_tag: { en: "Speaking", ko: "강연" },
-    row3_title: { en: "Book a talk", ko: "강연 요청하기" },
-    row3_sub: { en: "For companies &amp; schools", ko: "기업 및 학교 대상" },
-    row4_tag: { en: "Paid", ko: "유료" },
-    row4_title: { en: "Mentorship, for professionals", ko: "멘토십 · 직장인 대상" },
-    row4_sub: { en: "30 min · 1:1, by request", ko: "30분 · 1:1 · 요청 시 진행" },
-    row5_tag: { en: "Free", ko: "무료" },
-    row5_title: { en: "Mentorship, for students", ko: "멘토십 · 학생 대상" },
-    row5_sub: { en: "Email your question, anytime", ko: "언제든 이메일로 질문하세요" },
+    row3_tag: { en: "Speaking", ko: "강연", es: "Charlas" },
+    row3_title: { en: "Book a talk", ko: "강연 요청하기", es: "Reservar una charla" },
+    row3_sub: { en: "For companies &amp; schools", ko: "기업 및 학교 대상", es: "Para empresas y escuelas" },
+    row4_tag: { en: "Paid", ko: "유료", es: "Pago" },
+    row4_title: { en: "Mentorship, for professionals", ko: "멘토십 · 직장인 대상", es: "Mentoría, para profesionales" },
+    row4_sub: { en: "30 min · 1:1, by request", ko: "30분 · 1:1 · 요청 시 진행", es: "30 min · 1:1, a solicitud" },
+    row5_tag: { en: "Free", ko: "무료", es: "Gratis" },
+    row5_title: { en: "Mentorship, for students", ko: "멘토십 · 학생 대상", es: "Mentoría, para estudiantes" },
+    row5_sub: { en: "Email your question, anytime", ko: "언제든 이메일로 질문하세요", es: "Escríbeme tu pregunta, cuando quieras" },
     footer_line: {
-      en: "If any of this helps someone move forward, that's reason enough to keep going.",
-      ko: "이 이야기가 누군가에게 한 걸음이 되어준다면, 그걸로 충분히 계속할 이유가 됩니다."
+      en: "If this helps someone move forward, that's enough.",
+      ko: "이 이야기가 누군가에게 도움이 된다면, 그걸로 충분합니다.",
+      es: "Si esto ayuda a alguien a avanzar, con eso basta."
     }
   };
 
@@ -515,7 +571,7 @@ main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-
       if(entry && entry[lang] !== undefined) el.innerHTML = entry[lang];
     });
     document.querySelectorAll('[data-href-en]').forEach(el=>{
-      const href = lang === 'ko' ? el.getAttribute('data-href-ko') : el.getAttribute('data-href-en');
+      const href = el.getAttribute('data-href-' + lang) || el.getAttribute('data-href-en');
       if(href) el.setAttribute('href', href);
     });
     document.querySelectorAll('.lang-toggle button').forEach(btn=>{
