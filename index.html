@@ -4,592 +4,407 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Soojin Shim</title>
-<meta name="description" content="Soojin Shim — Product builder at Bear Robotics. Writing on robots, parenting, and everything in between.">
+<meta name="description" content="Soojin Shim builds products at Bear Robotics. Then she goes home to two tiny humans with no off switch.">
+<meta name="theme-color" content="#DCEAF5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+  /* One scene: the page starts at noon and sets into night as you scroll. Everything after lives under the stars. */
   :root{
-    --bg:#1A2B3D;
-    --bg-soft:#22374C;
-    --text:#F2ECDD;
-    --text-soft:#AEA79A;
-    --text-faint:#6E7A8C;
-    --border:rgba(242,236,221,.12);
-    --border-strong:rgba(242,236,221,.22);
-    --accent:#E0A857;
-    --radius-lg:16px;
-    --radius-md:10px;
-    --maxw:600px;
+    --sky-top:#BFD8EC;      /* noon, through the fog */
+    --sky-bottom:#EEF3F7;
+    --ink:#1D1D1F;
+    --night-top:#0D1424;    /* 10 p.m., kids finally asleep */
+    --night-bottom:#18233C;
+    --fg:#F5F5F7;
+    --fg-2:#A1A1A6;
+    --tile:rgba(255,255,255,.055);
+    --tile-hover:rgba(255,255,255,.085);
+    --hair:rgba(255,255,255,.1);
+    --glow:#FFC56B;         /* the hallway nightlight */
+
+    --sans:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Pretendard Variable", "Apple SD Gothic Neo", system-ui, sans-serif;
+    --maxw:980px;
+    --p:0;                  /* scroll progress through the sunset, 0 to 1 */
   }
+  html[lang="ko"]{ --sans:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", "Inter", system-ui, sans-serif; }
+
   *{box-sizing:border-box;}
-  html{
-    scroll-behavior:smooth;
-    width:100%;
-    overflow-x:hidden;
-  }
+  html{background:var(--night-top); -webkit-text-size-adjust:100%;}
   body{
-    margin:0;
-    width:100%;
-    max-width:100vw;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.6;
-    font-size:15.5px;
-    overflow-x:hidden;
-    position:relative;
+    margin:0; color:var(--fg);
+    background:linear-gradient(var(--night-top), var(--night-bottom) 60%, var(--night-top));
+    font-family:var(--sans); font-size:17px; line-height:1.47; letter-spacing:-.012em;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
-  a{color:inherit;}
-  .serif{font-family:'Instrument Serif', Georgia, serif; font-weight:400;}
-  .serif-i{font-family:'Instrument Serif', Georgia, serif; font-style:italic; color:var(--accent);}
-  html[lang="ko"] .serif-i{font-family:'Noto Sans KR', sans-serif; font-style:normal; font-weight:700;}
+  html[lang="ko"] body{word-break:keep-all; letter-spacing:-.02em; line-height:1.6;}
+  a{color:inherit; text-decoration:none;}
+  :focus-visible{outline:2px solid var(--glow); outline-offset:4px; border-radius:6px;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding-left:max(22px, env(safe-area-inset-left, 0px)); padding-right:max(22px, env(safe-area-inset-right, 0px));}
 
-  .grain{
-    position:fixed; inset:0; z-index:900; pointer-events:none; opacity:.035; mix-blend-mode:screen;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  /* ---------- language ---------- */
+  .lang{
+    position:fixed; z-index:20; top:calc(14px + env(safe-area-inset-top, 0px)); right:max(14px, env(safe-area-inset-right, 0px));
+    display:flex; padding:3px; border-radius:999px;
+    background:rgba(255,255,255,.14); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+    color:var(--lang-fg, var(--ink));
   }
+  .lang button{
+    font:500 12px/1 var(--sans); letter-spacing:0; color:inherit; opacity:.6;
+    background:none; border:0; padding:8px 11px; border-radius:999px; cursor:pointer;
+  }
+  .lang button[aria-pressed="true"]{opacity:1; background:rgba(127,127,127,.18);}
 
-  /* ---- language toggle ---- */
-  .lang-toggle{
-    position:fixed; top:16px; right:16px; z-index:200;
-    display:flex; gap:2px; padding:3px;
-    background:rgba(242,236,221,.07); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    border:1px solid var(--border); border-radius:100px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 16px rgba(0,0,0,.18);
+  /* ---------- the scene ---------- */
+  .scene{position:relative; height:260vh;}
+  .stage{position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; display:grid; place-items:center;}
+  .sky{position:absolute; inset:0; z-index:0;}
+  .sky-night{background:linear-gradient(var(--night-top), var(--night-bottom));}
+  .sky-day{background:linear-gradient(var(--sky-top), var(--sky-bottom)); opacity:clamp(0, calc(1 - var(--p) * 2.6), 1);}
+  .sky-dusk{
+    background:linear-gradient(#3E4E7E 0%, #8C6E93 38%, #E88E6E 72%, #F7C58F 100%);
+    opacity:clamp(0, calc(1 - (var(--p) - .4) * (var(--p) - .4) * 30), 1);
   }
-  .lang-toggle button{
-    border:none; background:transparent; color:var(--text-soft);
-    font-family:'Inter', sans-serif; font-size:11.5px; font-weight:600; letter-spacing:.02em;
-    padding:8px 13px; min-height:32px; border-radius:100px; cursor:pointer;
-    transition:background .2s ease, color .2s ease;
+  .sun{
+    position:absolute; z-index:0; left:66%; top:12%; width:20vmin; height:20vmin; border-radius:50%;
+    background:radial-gradient(circle, #FFF9EC 0 38%, rgba(255,236,200,.55) 52%, transparent 72%);
+    transform:translateY(calc(var(--p) * 110vh)); opacity:clamp(0, calc(1 - var(--p) * 1.5), 1);
   }
-  .lang-toggle button.active{background:var(--accent); color:var(--bg);}
-  .lang-toggle button:not(.active):hover{color:var(--text);}
+  .moon{
+    position:absolute; z-index:0; right:14%; top:13%; width:9vmin; height:9vmin; min-width:52px; min-height:52px; border-radius:50%;
+    box-shadow:inset -1.6vmin 1vmin 0 0 #F3EEDF; transform:rotate(-20deg) translateY(calc((1 - var(--p)) * 30vh));
+    opacity:calc((var(--p) - .45) * 2.6); filter:drop-shadow(0 0 18px rgba(243,238,223,.25));
+  }
+  canvas.stars{position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:clamp(0, calc((var(--p) - .35) * 2.2), 1);}
 
-  /* ---- a single warm glow, like a harbor light against the night ---- */
-  .blob{
-    position:absolute; top:-150px; right:-120px; width:480px; height:480px;
-    background:radial-gradient(circle, rgba(224,168,87,.4) 0%, transparent 65%);
-    filter:blur(90px); opacity:.55; mix-blend-mode:screen;
-    pointer-events:none; z-index:0;
-    animation:drift 26s ease-in-out infinite alternate;
+  .stage-copy{position:relative; z-index:2; text-align:center; width:100%;}
+  .stage h1{margin:0; display:grid;}
+  .stage h1 > span{
+    grid-area:1 / 1; font-weight:700; font-size:clamp(54px, 12.6vw, 148px); line-height:1.02; letter-spacing:-.048em;
   }
-  @keyframes drift{
-    0%{transform:translate(0,0) scale(1);}
-    100%{transform:translate(-26px,24px) scale(1.08);}
+  html[lang="ko"] .stage h1 > span{letter-spacing:-.06em; font-size:clamp(48px, 11.5vw, 132px);}
+  .l-day{color:var(--ink); opacity:clamp(0, calc(1 - (var(--p) - .28) * 5), 1); transform:translateY(calc(var(--p) * -14vh)) scale(calc(1 - var(--p) * .08));}
+  .l-night{color:var(--fg); opacity:clamp(0, calc((var(--p) - .42) * 5), 1); transform:translateY(calc((1 - var(--p)) * 10vh));}
+  .stage .lede{
+    margin:28px auto 0; max-width:30em; padding:0 22px;
+    font-size:clamp(19px, 2.2vw, 24px); line-height:1.38; font-weight:500; color:var(--fg-2); letter-spacing:-.02em;
+    opacity:clamp(0, calc((var(--p) - .66) * 5), 1); transform:translateY(calc((1 - var(--p)) * 4vh));
   }
-  .hero{position:relative;}
+  .stage .lede b{color:var(--fg); font-weight:600;}
+  .hint{
+    position:absolute; z-index:2; left:0; right:0; bottom:calc(28px + env(safe-area-inset-bottom, 0px)); margin:0; text-align:center;
+    font-size:14px; font-weight:500; color:rgba(29,29,31,.55); letter-spacing:0;
+    opacity:clamp(0, calc(1 - var(--p) * 8), 1);
+  }
+  .hint i{display:block; width:1px; height:28px; margin:10px auto 0; background:currentColor; opacity:.5;}
 
-  /* ---- snow: three depth layers, natural sway, fades out of the reading zone ---- */
-  .snow{
-    position:fixed; inset:0; z-index:50; pointer-events:none; overflow:hidden;
-    -webkit-mask-image:linear-gradient(to bottom, black 0%, black 32%, rgba(0,0,0,.35) 55%, transparent 78%);
-    mask-image:linear-gradient(to bottom, black 0%, black 32%, rgba(0,0,0,.35) 55%, transparent 78%);
-  }
-  .flake{
-    position:absolute; top:-6vh; border-radius:50%; background:#FFFFFF;
-    animation-timing-function:linear; animation-iteration-count:infinite;
-  }
-  .flake-far{filter:blur(1px); animation-name:fallFar;}
-  .flake-mid{filter:blur(.4px); animation-name:fallMid;}
-  .flake-near{animation-name:fallNear;}
-  .flake-spark{
-    box-shadow:0 0 6px 1px rgba(255,255,255,.8), 0 0 14px 3px rgba(224,168,87,.35);
-  }
-  @keyframes fallFar{
-    0%{transform:translate(0,0); opacity:0;}
-    10%{opacity:.32;}
-    50%{transform:translate(10px,56vh);}
-    90%{opacity:.24;}
-    100%{transform:translate(-6px,112vh); opacity:0;}
-  }
-  @keyframes fallMid{
-    0%{transform:translate(0,0) rotate(0deg); opacity:0;}
-    10%{opacity:.55;}
-    30%{transform:translate(14px,34vh) rotate(40deg);}
-    60%{transform:translate(-10px,67vh) rotate(-30deg);}
-    90%{opacity:.42;}
-    100%{transform:translate(8px,112vh) rotate(20deg); opacity:0;}
-  }
-  @keyframes fallNear{
-    0%{transform:translate(0,0) rotate(0deg); opacity:0;}
-    8%{opacity:.9;}
-    28%{transform:translate(-18px,31vh) rotate(-35deg);}
-    55%{transform:translate(16px,62vh) rotate(45deg);}
-    82%{transform:translate(-12px,90vh) rotate(-20deg);}
-    92%{opacity:.7;}
-    100%{transform:translate(10px,112vh) rotate(10deg); opacity:0;}
-  }
+  /* no animation wanted: show the night version, still */
   @media (prefers-reduced-motion: reduce){
-    .flake{animation:none; display:none;}
-    .blob{animation:none;}
+    :root{--p:1;}
+    .scene{height:auto;} .stage{position:relative; height:auto; min-height:88vh; padding:120px 0 80px;}
+    .hint{display:none;}
+    .stage h1{display:block;} .stage h1 > span{display:block;}
+    .l-day{opacity:1; color:var(--fg-2); transform:none;}
+    .l-night, .stage .lede{transform:none;}
   }
 
-  /* ---- headline entrance ---- */
-  .hero h1{opacity:0; animation:fadeUp .7s ease forwards;}
-  .hero .lede, .hero .meta-row{opacity:0; animation:fadeUp .7s ease forwards; animation-delay:.14s;}
-  .hero .meta-row{animation-delay:.24s;}
-  @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
-  @media (prefers-reduced-motion: reduce){
-    .hero h1, .hero .lede, .hero .meta-row{animation:none; opacity:1;}
-  }
+  /* ---------- sections ---------- */
+  main{position:relative; z-index:2;}
+  section{padding:clamp(96px, 14vw, 160px) 0 0;}
+  .section-head{max-width:720px; margin:0 0 clamp(36px, 5vw, 56px);}
+  h2, .tile h3, .stage .lede{text-wrap:balance;}
+  h2{margin:0; font-size:clamp(38px, 6vw, 64px); line-height:1.06; font-weight:700; letter-spacing:-.04em;}
+  html[lang="ko"] h2{letter-spacing:-.05em; line-height:1.15;}
+  .section-head p{margin:16px 0 0; font-size:clamp(19px, 2.1vw, 21px); line-height:1.4; color:var(--fg-2); font-weight:500; letter-spacing:-.02em;}
 
-main{max-width:var(--maxw); margin:0 auto; padding:0 22px; position:relative; z-index:1;}
+  .tiles{display:grid; gap:20px; grid-template-columns:repeat(2, minmax(0,1fr));}
+  .tiles.three{grid-template-columns:repeat(3, minmax(0,1fr));}
+  .tile{
+    position:relative; display:flex; flex-direction:column; min-height:280px;
+    padding:clamp(26px, 3vw, 36px); border-radius:28px; background:var(--tile);
+    box-shadow:inset 0 0 0 1px var(--hair);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    transition:background .3s ease;
+  }
+  a.tile:hover{background:var(--tile-hover);}
+  .tile.short{min-height:240px;}
+  .kicker{font-size:14px; font-weight:600; color:var(--glow); letter-spacing:-.005em; margin:0 0 10px;}
+  .tile h3{margin:0; font-size:clamp(26px, 2.8vw, 32px); line-height:1.12; font-weight:700; letter-spacing:-.035em;}
+  html[lang="ko"] .tile h3{letter-spacing:-.045em; line-height:1.25;}
+  .tile p{margin:12px 0 0; color:var(--fg-2); font-size:17px; line-height:1.47;}
+  .tile p.kicker{margin:0 0 10px; color:var(--glow); font-size:14px;}
+  .tile .more{margin-top:auto; padding-top:28px; font-size:17px; font-weight:500; color:var(--fg); display:inline-flex; align-items:center; gap:6px;}
+  .tile .more svg{width:8px; height:13px; transition:transform .25s ease;}
+  a.tile:hover .more svg{transform:translateX(3px);}
+  a.tile:hover .more{color:var(--glow);}
 
-  /* ---- hero ---- */
-  .hero{padding:min(15vh,116px) 0 56px;}
-  .hero h1{
-    font-size:clamp(30px,8.8vw,56px); line-height:1.12; letter-spacing:-.01em;
-    margin:0 0 22px; font-weight:400;
-  }
-  html[lang="ko"] .hero h1{font-weight:700; letter-spacing:-.01em;}
-  .hero p.lede{
-    font-size:16px; color:var(--text-soft); max-width:420px; margin:0 0 26px; line-height:1.7;
-  }
-  .hero p.lede strong{color:var(--text); font-weight:600;}
-  .meta-row{display:flex; flex-wrap:wrap; gap:8px;}
-  .chip{
-    font-size:12px; font-weight:500; padding:6px 13px; border-radius:100px;
-    background:rgba(242,236,221,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    border:1px solid var(--border); color:var(--text-soft);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
-    display:inline-flex; align-items:center; gap:6px;
-  }
+  /* "now shipping": a plain spec list */
+  .specs{border-top:1px solid var(--hair);}
+  .spec{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); gap:8px 40px; padding:30px 0; border-bottom:1px solid var(--hair); align-items:baseline;}
+  .spec h3{margin:0; font-size:24px; font-weight:600; letter-spacing:-.03em;}
+  .spec p{margin:0; color:var(--fg-2); font-size:19px; line-height:1.45; letter-spacing:-.02em;}
+  .spec a, .aside a{color:var(--fg); border-bottom:1px solid rgba(255,255,255,.3);}
+  .spec a:hover, .aside a:hover{color:var(--glow); border-color:var(--glow);}
+  .aside{margin:28px 0 0; color:var(--fg-2); font-size:17px;}
 
-  /* ---- section label ---- */
-  .eyebrow{
-    font-size:11px; font-weight:600; letter-spacing:.11em; text-transform:uppercase;
-    color:var(--accent); margin:0 0 13px;
-  }
-  section{padding:66px 0;}
-  .section-head{margin-bottom:28px;}
-  .section-head h2{font-size:25px; margin:0 0 7px; font-weight:400; letter-spacing:-.005em; line-height:1.35;}
-  html[lang="ko"] .section-head h2{font-weight:700;}
-  .section-head p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:400px; line-height:1.65;}
+  footer{margin-top:clamp(120px, 16vw, 180px); padding:22px 0 calc(40px + env(safe-area-inset-bottom, 0px)); border-top:1px solid var(--hair); font-size:12px; line-height:1.6; color:#86868B; letter-spacing:0;}
+  footer .wrap{display:flex; justify-content:space-between; gap:8px 24px; flex-wrap:wrap;}
+  footer p{margin:0;}
 
-  /* ---- writing: numbered list ---- */
-  .write-list{border-top:1px solid var(--border);}
-  .write-row{
-    display:flex; align-items:center; gap:18px;
-    text-decoration:none; color:var(--text);
-    padding:22px 0; border-bottom:1px solid var(--border);
-    transition:padding-left .25s ease;
-  }
-  .write-row:hover{padding-left:6px;}
-  .write-row .num{
-    font-family:'Instrument Serif', serif; font-size:22px; color:var(--text-faint);
-    width:28px; flex-shrink:0;
-  }
-  .write-row .body{flex:1; min-width:0;}
-  .write-row .lang-tag{
-    font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
-    color:var(--text-faint); display:block; margin-bottom:4px;
-  }
-  .write-row h3{font-size:18.5px; margin:0 0 3px; font-weight:400; font-family:'Instrument Serif',serif;}
-  html[lang="ko"] .write-row h3{font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:16.5px;}
-  .write-row .sub{font-size:13px; color:var(--text-soft); margin:0;}
-  .write-row .arrow{
-    flex-shrink:0; width:34px; height:34px; border-radius:50%;
-    background:rgba(242,236,221,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    border:1px solid var(--border);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 2px 10px rgba(0,0,0,.18);
-    display:flex; align-items:center; justify-content:center;
-    transition:transform .25s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
-  }
-  .write-row:hover .arrow{
-    transform:translateX(3px);
-    background:var(--accent); border-color:var(--accent);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 4px 16px rgba(224,168,87,.35);
-  }
-  .write-row .arrow svg{width:12px; height:12px; transition:stroke .2s ease;}
-  .write-row:hover .arrow svg{stroke:var(--bg);}
-
-  /* ---- now / working-on cards ---- */
-  .now-card{
-    border:1px solid var(--border); border-radius:var(--radius-lg);
-    padding:24px; background:rgba(242,236,221,.045);
-    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 24px rgba(0,0,0,.16);
-    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
-    transition:border-color .2s ease;
-  }
-  .now-card:hover{border-color:var(--border-strong);}
-  .now-card + .now-card{margin-top:14px;}
-  .now-card .info h3{font-size:18px; margin:0 0 7px; font-weight:400; font-family:'Instrument Serif',serif;}
-  html[lang="ko"] .now-card .info h3{font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:16.5px;}
-  .now-card .info p{font-size:13.5px; color:var(--text-soft); margin:0; max-width:360px; line-height:1.65;}
-  .now-card .visit{
-    flex-shrink:0; font-size:12.5px; font-weight:500; color:var(--text-soft);
-    text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:2px;
-  }
-  .now-card .visit:hover{color:var(--accent);}
-  .now-card .visit svg{width:10px; height:10px;}
-
-  /* ---- contact list ---- */
-  .li-row{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:13px 16px; border:1px solid var(--border); border-radius:var(--radius-md);
-    background:rgba(242,236,221,.04); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-    text-decoration:none; color:var(--text); margin-top:14px;
-    transition:border-color .2s ease;
-  }
-  .li-row:hover{border-color:var(--border-strong);}
-  .li-row .left{display:flex; align-items:center; gap:9px; font-size:13px; font-weight:500;}
-  .li-row .icon{
-    width:22px; height:22px; border-radius:7px; background:rgba(242,236,221,.06); border:1px solid var(--border);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .li-row .icon svg{width:12px; height:12px;}
-  .li-row svg.chev{width:10px; height:10px; color:var(--text-faint);}
-
-  footer{
-    padding:44px 22px 56px; text-align:center;
-    font-size:12px; color:var(--text-faint); line-height:1.8;
-  }
-
-  /* ---- snow drift at the very bottom, with a twinkle or two ---- */
-  .snow-drift{
-    position:relative; width:100%;
-    height:40px; margin-top:-6px; overflow:hidden; pointer-events:none;
-  }
-  .snow-drift svg{width:100%; height:100%; display:block;}
-  .sparkle{
-    position:absolute; border-radius:50%;
-    background:#FFFFFF; box-shadow:0 0 7px 2px rgba(255,255,255,.55);
-    animation:twinkle 4.4s ease-in-out infinite;
-  }
-  @keyframes twinkle{
-    0%,100%{opacity:.1; transform:scale(.55);}
-    50%{opacity:.85; transform:scale(1.15);}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .sparkle{animation:none; opacity:.45;}
-  }
-
-  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
-  .reveal.in{opacity:1; transform:translateY(0);}
-  @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none;}}
-
-  @media (max-width:420px){
-    .now-card{flex-direction:column;}
-    .lang-toggle{top:12px; right:12px;}
-    .lang-toggle button{padding:9px 14px; font-size:12px;}
+  @media (max-width:900px){ .tiles.three{grid-template-columns:minmax(0,1fr);} .tiles.three .tile{min-height:0;} }
+  @media (max-width:700px){
+    .tiles{grid-template-columns:minmax(0,1fr);}
+    .tile{min-height:0;}
+    .spec{grid-template-columns:minmax(0,1fr); gap:6px;}
   }
 </style>
 </head>
 <body>
-<div class="grain"></div>
 
-<div class="lang-toggle">
-  <button type="button" data-lang="en" class="active">EN</button>
-  <button type="button" data-lang="ko">한글</button>
-  <button type="button" data-lang="es">ES</button>
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" data-lang="en" aria-pressed="true">EN</button>
+  <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+  <button type="button" data-lang="es" aria-pressed="false">ES</button>
 </div>
 
-<div class="snow">
-  <span class="flake flake-far" style="left:3%; width:2px; height:2px; animation-duration:22s; animation-delay:0s;"></span>
-  <span class="flake flake-far" style="left:16%; width:2px; height:2px; animation-duration:26s; animation-delay:6s;"></span>
-  <span class="flake flake-far" style="left:29%; width:1.5px; height:1.5px; animation-duration:24s; animation-delay:12s;"></span>
-  <span class="flake flake-far" style="left:41%; width:2px; height:2px; animation-duration:28s; animation-delay:3s;"></span>
-  <span class="flake flake-far" style="left:53%; width:1.5px; height:1.5px; animation-duration:23s; animation-delay:16s;"></span>
-  <span class="flake flake-far" style="left:64%; width:2px; height:2px; animation-duration:27s; animation-delay:9s;"></span>
-  <span class="flake flake-far" style="left:76%; width:1.5px; height:1.5px; animation-duration:25s; animation-delay:19s;"></span>
-  <span class="flake flake-far" style="left:88%; width:2px; height:2px; animation-duration:29s; animation-delay:2s;"></span>
-  <span class="flake flake-far" style="left:96%; width:1.5px; height:1.5px; animation-duration:24s; animation-delay:14s;"></span>
+<canvas class="stars" aria-hidden="true"></canvas>
 
-  <span class="flake flake-mid" style="left:8%; width:3.5px; height:3.5px; animation-duration:15s; animation-delay:1s;"></span>
-  <span class="flake flake-mid" style="left:22%; width:3px; height:3px; animation-duration:17s; animation-delay:7s;"></span>
-  <span class="flake flake-mid" style="left:35%; width:3.5px; height:3.5px; animation-duration:14s; animation-delay:4s;"></span>
-  <span class="flake flake-mid" style="left:48%; width:3px; height:3px; animation-duration:18s; animation-delay:11s;"></span>
-  <span class="flake flake-mid" style="left:60%; width:3.5px; height:3.5px; animation-duration:16s; animation-delay:2s;"></span>
-  <span class="flake flake-mid" style="left:71%; width:3px; height:3px; animation-duration:19s; animation-delay:13s;"></span>
-  <span class="flake flake-mid" style="left:83%; width:3.5px; height:3.5px; animation-duration:15s; animation-delay:8s;"></span>
-  <span class="flake flake-mid" style="left:93%; width:3px; height:3px; animation-duration:17s; animation-delay:5s;"></span>
+<header class="scene">
+  <div class="stage">
+    <div class="sky sky-night" aria-hidden="true"></div>
+    <div class="sky sky-dusk" aria-hidden="true"></div>
+    <div class="sky sky-day" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <div class="moon" aria-hidden="true"></div>
 
-  <span class="flake flake-near" style="left:12%; width:5.5px; height:5.5px; animation-duration:10s; animation-delay:0s;"></span>
-  <span class="flake flake-near flake-spark" style="left:26%; width:6px; height:6px; animation-duration:9s; animation-delay:5s;"></span>
-  <span class="flake flake-near" style="left:44%; width:5px; height:5px; animation-duration:11s; animation-delay:2s;"></span>
-  <span class="flake flake-near" style="left:58%; width:5.5px; height:5.5px; animation-duration:9.5s; animation-delay:7s;"></span>
-  <span class="flake flake-near flake-spark" style="left:74%; width:6px; height:6px; animation-duration:10.5s; animation-delay:3s;"></span>
-  <span class="flake flake-near" style="left:90%; width:5px; height:5px; animation-duration:10s; animation-delay:6s;"></span>
-</div>
-
-<main id="top">
-
-  <section class="hero">
-    <div class="blob"></div>
-    <h1 data-i18n="hero_h1"><span class="serif-i">Robots</span> by day.<br>Kids by night.</h1>
-    <p class="lede" data-i18n="hero_lede">I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once they're asleep, I write it down.</p>
-    <div class="meta-row">
-      <span class="chip" data-i18n="chip1">San Francisco Bay Area</span>
-      <span class="chip" data-i18n="chip2">New posts biweekly</span>
+    <div class="stage-copy">
+      <h1>
+        <span class="l-day" data-i18n="day">Robots by day.</span>
+        <span class="l-night" data-i18n="night">Kids by night.</span>
+      </h1>
+      <p class="lede" data-i18n="lede">Soojin Shim <b>builds products at Bear Robotics.</b> Then she goes home to two tiny humans with no off switch.</p>
     </div>
-  </section>
+    <p class="hint" aria-hidden="true"><span data-i18n="hint">Scroll to sunset</span><i></i></p>
+  </div>
+</header>
 
-  <section id="writing">
+<main>
+  <section id="writing" class="wrap">
     <div class="section-head">
-      <p class="eyebrow" data-i18n="writing_eyebrow">Writing</p>
-      <h2 data-i18n="writing_h2">New thoughts, <span class="serif-i">every</span> other week</h2>
-      <p data-i18n="writing_p">Robots, parenting, and the questions I'm still working out.</p>
+      <h2 data-i18n="w_h">Written after bedtime.</h2>
+      <p data-i18n="w_p">Usually around 10 p.m. Occasionally 2 a.m.</p>
     </div>
-
-    <div class="write-list">
-      <a class="write-row reveal" data-href-en="https://notarobotsf.substack.com" data-href-ko="https://notarobotsf.substack.com" href="https://notarobotsf.substack.com">
-        <span class="num">01</span>
-        <span class="body">
-          <span class="lang-tag" data-i18n="row1_tag">English</span>
-          <h3 data-i18n="row1_title">Not a Robot Newsletter</h3>
-          <p class="sub" data-i18n="row1_sub">Human thoughts on robots, parenting, and everything in between</p>
-        </span>
-        <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+    <div class="tiles">
+      <a class="tile" href="https://notarobotsf.substack.com" target="_blank" rel="noopener">
+        <p class="kicker" data-i18n="w1_k">Newsletter · English</p>
+        <h3>Not a Robot.</h3>
+        <p data-i18n="w1_p">Human thoughts on robots, and on raising humans. Every other week.</p>
+        <span class="more"><span data-i18n="w1_more">Read on Substack</span><svg viewBox="0 0 8 13" fill="none" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-
-      <a class="write-row reveal" target="_blank" rel="noopener" data-href-en="https://www.instagram.com/notarobotsf/" data-href-ko="https://www.instagram.com/notarobotsf/" href="https://www.instagram.com/notarobotsf/">
-        <span class="num">02</span>
-        <span class="body">
-          <span class="lang-tag" data-i18n="row2_tag">Korean</span>
-          <h3 data-i18n="row2_title">Instagram</h3>
-          <p class="sub" data-i18n="row2_sub">Daily selected robot news</p>
-        </span>
-        <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+      <a class="tile" href="https://www.instagram.com/notarobotsf/" target="_blank" rel="noopener">
+        <p class="kicker" data-i18n="w2_k">Instagram · Korean</p>
+        <h3 data-i18n="w2_h">Robot news, hand-picked.</h3>
+        <p data-i18n="w2_p">Daily selected robot news. I do the scrolling, so you don't have to.</p>
+        <span class="more"><span data-i18n="w2_more">Follow @notarobotsf</span><svg viewBox="0 0 8 13" fill="none" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
     </div>
   </section>
 
-  <section id="now">
+  <section id="now" class="wrap">
     <div class="section-head">
-      <p class="eyebrow" data-i18n="now_eyebrow">Now</p>
-      <h2 data-i18n="now_h2">What I'm working on</h2>
-      <p data-i18n="now_p">How autonomous things enter our lives — and whether that's for the better.</p>
+      <h2 data-i18n="n_h">Now shipping.</h2>
+      <p data-i18n="n_p">What fills the hours between school drop-off and bedtime.</p>
     </div>
-
-    <div class="now-card reveal">
-      <div class="info">
-        <h3 data-i18n="now1_title">Bear Robotics</h3>
-        <p data-i18n="now1_p">Product, full-time.</p>
+    <div class="specs">
+      <div class="spec">
+        <h3>Bear Robotics</h3>
+        <p data-i18n="n1_p">Building robots that work alongside people. Product, full-time. <a href="https://www.bearrobotics.ai" target="_blank" rel="noopener">bearrobotics.ai</a></p>
       </div>
-      <a class="visit" href="https://www.bearrobotics.ai" target="_blank" rel="noopener">
-        <span data-i18n="now1_visit">Visit</span>
-        <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-
-    <div class="now-card reveal">
-      <div class="info">
-        <h3 data-i18n="now2_title">Mentoring</h3>
-        <p data-i18n="now2_p">Supporting graduate founders in the U.S. and Korea, through their schools.</p>
+      <div class="spec">
+        <h3 data-i18n="n2_h">Mentoring founders</h3>
+        <p data-i18n="n2_p">Grad-student founders in the U.S. and Korea, through their universities. Mostly, I ask good questions.</p>
       </div>
     </div>
   </section>
 
-  <section id="contact">
+  <section id="contact" class="wrap">
     <div class="section-head">
-      <p class="eyebrow" data-i18n="contact_eyebrow">Contact</p>
-      <h2 data-i18n="contact_h2">Let's <span class="serif-i">talk</span></h2>
-      <p data-i18n="contact_p">Talks on career growth, robotics, product, and working motherhood.</p>
+      <h2 data-i18n="c_h">Let's talk.</h2>
+      <p data-i18n="c_p">My inbox is open. Response time beats any toddler's.</p>
     </div>
-
-    <div class="write-list" style="margin-bottom:14px;">
-      <a class="write-row" target="_blank" rel="noopener"
+    <div class="tiles three">
+      <a class="tile short"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Speaking%20inquiry&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20a%20bit%20about%20what%20we%20have%20in%20mind%3A%0D%0A%0D%0AOrganization%3A%0D%0AEvent%20date%20%2B%20format%3A%0D%0ATopic%20we're%20interested%20in%3A%0D%0A%0D%0ALooking%20forward%20to%20connecting!"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%EA%B0%95%EC%97%B0%20%EB%AC%B8%EC%9D%98&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EB%85%BC%EC%9D%98%ED%95%98%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EB%82%B4%EC%9A%A9%EC%9D%84%20%EA%B0%84%EB%8B%A8%ED%9E%88%20%EB%82%A8%EA%B2%A8%EC%A3%BC%EC%84%B8%EC%9A%94%3A%0D%0A%0D%0A%EC%86%8C%EC%86%8D%20%EA%B8%B0%EA%B4%80%3A%0D%0A%ED%96%89%EC%82%AC%20%EC%9D%BC%EC%A0%95%20%EB%B0%8F%20%ED%98%95%EC%8B%9D%3A%0D%0A%EA%B4%80%EC%8B%AC%20%EC%9E%88%EB%8A%94%20%EC%A3%BC%EC%A0%9C%3A%0D%0A%0D%0A%EC%97%B0%EB%9D%BD%20%EA%B8%B0%EB%8B%A4%EB%A6%AC%EA%B2%A0%EC%8A%B5%EB%8B%88%EB%8B%A4!"
         data-href-es="mailto:soojinshim.design@gmail.com?subject=Consulta%20de%20charla&body=Hola%20Soojin%2C%0D%0A%0D%0AUn%20poco%20sobre%20lo%20que%20tenemos%20en%20mente%3A%0D%0A%0D%0AOrganizaci%C3%B3n%3A%0D%0AFecha%20y%20formato%20del%20evento%3A%0D%0ATema%20de%20inter%C3%A9s%3A%0D%0A%0D%0A%C2%A1Espero%20que%20podamos%20conectar!"
         href="mailto:soojinshim.design@gmail.com?subject=Speaking%20inquiry&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20a%20bit%20about%20what%20we%20have%20in%20mind%3A%0D%0A%0D%0AOrganization%3A%0D%0AEvent%20date%20%2B%20format%3A%0D%0ATopic%20we're%20interested%20in%3A%0D%0A%0D%0ALooking%20forward%20to%20connecting!">
-        <span class="body">
-          <span class="lang-tag" data-i18n="row3_tag">Speaking</span>
-          <h3 data-i18n="row3_title">Book a talk</h3>
-          <p class="sub" data-i18n="row3_sub">For companies &amp; schools</p>
-        </span>
-        <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+        <p class="kicker" data-i18n="c1_k">Speaking</p>
+        <h3 data-i18n="c1_h">On stage, minus the bedtime stories.</h3>
+        <p data-i18n="c1_p">Robots, product, and working while parenting. For companies and schools.</p>
+        <span class="more"><span data-i18n="c1_more">Invite me</span><svg viewBox="0 0 8 13" fill="none" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-
-      <a class="write-row" target="_blank" rel="noopener"
+      <a class="tile short"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Mentorship%20request%20(Professional)&body=Hi%20Soojin%2C%0D%0A%0D%0AA%20bit%20about%20me%20and%20what%20I'd%20love%20to%20chat%20about%3A%0D%0A%0D%0AName%3A%0D%0AWhat%20I'd%20like%20to%20talk%20through%3A%0D%0A%0D%0AThanks%20so%20much!"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%EB%A9%98%ED%86%A0%EC%8B%AD%20%EC%9A%94%EC%B2%AD%20(%EC%A7%81%EC%9E%A5%EC%9D%B8)&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EA%B0%84%EB%8B%A8%ED%95%9C%20%EC%86%8C%EA%B0%9C%EC%99%80%20%EC%9D%B4%EC%95%BC%EA%B8%B0%20%EB%82%98%EB%88%84%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EC%A3%BC%EC%A0%9C%EB%A5%BC%20%EB%82%A8%EA%B2%A8%EC%A3%BC%EC%84%B8%EC%9A%94%3A%0D%0A%0D%0A%EC%9D%B4%EB%A6%84%3A%0D%0A%EC%9D%B4%EC%95%BC%EA%B8%B0%ED%95%98%EA%B3%A0%20%EC%8B%B6%EC%9D%80%20%EC%A3%BC%EC%A0%9C%3A%0D%0A%0D%0A%EA%B0%90%EC%82%AC%ED%95%A9%EB%8B%88%EB%8B%A4!"
         data-href-es="mailto:soojinshim.design@gmail.com?subject=Solicitud%20de%20mentor%C3%ADa%20(Profesional)&body=Hola%20Soojin%2C%0D%0A%0D%0AUn%20poco%20sobre%20m%C3%AD%20y%20de%20qu%C3%A9%20me%20encantar%C3%ADa%20hablar%3A%0D%0A%0D%0ANombre%3A%0D%0ATema%20que%20me%20gustar%C3%ADa%20conversar%3A%0D%0A%0D%0A%C2%A1Muchas%20gracias!"
         href="mailto:soojinshim.design@gmail.com?subject=Mentorship%20request%20(Professional)&body=Hi%20Soojin%2C%0D%0A%0D%0AA%20bit%20about%20me%20and%20what%20I'd%20love%20to%20chat%20about%3A%0D%0A%0D%0AName%3A%0D%0AWhat%20I'd%20like%20to%20talk%20through%3A%0D%0A%0D%0AThanks%20so%20much!">
-        <span class="body">
-          <span class="lang-tag" data-i18n="row4_tag">Paid</span>
-          <h3 data-i18n="row4_title">Mentorship, for professionals</h3>
-          <p class="sub" data-i18n="row4_sub">30 min · 1:1, by request</p>
-        </span>
-        <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+        <p class="kicker" data-i18n="c2_k">1:1 mentoring · Paid</p>
+        <h3 data-i18n="c2_h">30 minutes. One hard question.</h3>
+        <p data-i18n="c2_p">For working professionals who want a second brain on a career call.</p>
+        <span class="more"><span data-i18n="c2_more">Book a session</span><svg viewBox="0 0 8 13" fill="none" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-
-      <a class="write-row" target="_blank" rel="noopener"
+      <a class="tile short"
         data-href-en="mailto:soojinshim.design@gmail.com?subject=Student%20question&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20my%20question%3A%0D%0A%0D%0A"
         data-href-ko="mailto:soojinshim.design@gmail.com?subject=%ED%95%99%EC%83%9D%20%EC%A7%88%EB%AC%B8&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94%20%EC%8B%AC%EC%88%98%EC%A7%84%EB%8B%98%2C%0D%0A%0D%0A%EC%A7%88%EB%AC%B8%20%EB%82%A8%EA%B9%81%EB%8B%88%EB%8B%A4%3A%0D%0A%0D%0A"
         data-href-es="mailto:soojinshim.design@gmail.com?subject=Pregunta%20de%20estudiante&body=Hola%20Soojin%2C%0D%0A%0D%0AAqu%C3%AD%20va%20mi%20pregunta%3A%0D%0A%0D%0A"
         href="mailto:soojinshim.design@gmail.com?subject=Student%20question&body=Hi%20Soojin%2C%0D%0A%0D%0AHere's%20my%20question%3A%0D%0A%0D%0A">
-        <span class="body">
-          <span class="lang-tag" data-i18n="row5_tag">Free</span>
-          <h3 data-i18n="row5_title">Mentorship, for students</h3>
-          <p class="sub" data-i18n="row5_sub">Email your question, anytime</p>
-        </span>
-        <span class="arrow">
-          <svg viewBox="0 0 14 14" fill="none" stroke="#F2ECDD"><path d="M2 12L12 2M12 2H4M12 2V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+        <p class="kicker" data-i18n="c3_k">Students · Free</p>
+        <h3 data-i18n="c3_h">No question too small.</h3>
+        <p data-i18n="c3_p">Email me anytime. I was a student once, and I still remember.</p>
+        <span class="more"><span data-i18n="c3_more">Ask a question</span><svg viewBox="0 0 8 13" fill="none" aria-hidden="true"><path d="M1.5 1.5 6.5 6.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
     </div>
-
-    <a class="li-row" href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">
-      <span class="left">
-        <span class="icon">
-          <svg viewBox="0 0 24 24" fill="#F2ECDD"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
-        </span>
-        LinkedIn
-      </span>
-      <svg class="chev" viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H4M12 2V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
+    <p class="aside" data-i18n="li">Prefer something more formal? Find me on <a href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">LinkedIn</a>.</p>
   </section>
 
+  <footer>
+    <div class="wrap">
+      <p data-i18n="f1">Designed after bedtime in the Bay Area. No robots were harmed.</p>
+      <p>© 2026 Soojin Shim</p>
+    </div>
+  </footer>
 </main>
 
-<footer>
-  <span data-i18n="footer_line">If this helps someone move forward, that's enough.</span><br>
-  © 2026 Soojin Shim
-</footer>
-
-<div class="snow-drift">
-  <svg viewBox="0 0 1200 44" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="snowBack" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#E4EDF3"/>
-        <stop offset="100%" stop-color="#C7D5E1"/>
-      </linearGradient>
-      <linearGradient id="snowFront" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#FFFFFF"/>
-        <stop offset="100%" stop-color="#DCE7EF"/>
-      </linearGradient>
-    </defs>
-    <path d="M0,44 L0,22 C260,15 420,27 600,20 C820,12 980,24 1200,17 L1200,44 Z" fill="url(#snowBack)" opacity=".5"/>
-    <path d="M0,44 L0,15 C300,25 520,9 760,18 C940,25 1060,13 1200,20 L1200,44 Z" fill="url(#snowFront)" opacity=".96"/>
-  </svg>
-  <span class="sparkle" style="left:16%; bottom:15px; width:2.5px; height:2.5px; animation-delay:0s;"></span>
-  <span class="sparkle" style="left:38%; bottom:21px; width:2px; height:2px; animation-delay:1.6s;"></span>
-  <span class="sparkle" style="left:62%; bottom:13px; width:3px; height:3px; animation-delay:.8s;"></span>
-  <span class="sparkle" style="left:83%; bottom:18px; width:2px; height:2px; animation-delay:2.4s;"></span>
-</div>
-
 <script>
-  const els = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:.15});
-  els.forEach(el=>io.observe(el));
-
-  const translations = {
-    hero_h1: {
-      en: '<span class="serif-i">Robots</span> by day.<br>Kids by night.',
-      ko: '<span class="serif-i">로봇은</span> 낮에.<br>육아는 밤에.',
-      es: '<span class="serif-i">Robots</span> de día.<br>Hijos de noche.'
+  const t = {
+    day:   { en:"Robots by day.", ko:"낮에는 로봇.", es:"Robots de día." },
+    night: { en:"Kids by night.", ko:"밤에는 아이들.", es:"Hijos de noche." },
+    lede: {
+      en:"Soojin Shim <b>builds products at Bear Robotics.</b> Then she goes home to two tiny humans with no off switch.",
+      ko:"심수진은 <b>Bear Robotics에서 프로덕트를 만듭니다.</b> 퇴근하면 전원 버튼이 없는 두 꼬마가 기다리고 있죠.",
+      es:"Soojin Shim <b>crea productos en Bear Robotics.</b> Luego vuelve a casa con dos pequeños humanos sin botón de apagado."
     },
-    hero_lede: {
-      en: "I'm Soojin — <strong>product builder at Bear Robotics</strong>, mother of two. Most nights, once they're asleep, I write it down.",
-      ko: "안녕하세요, 심수진입니다. <strong>Bear Robotics에서 프로덕트를 만들고</strong>, 두 아이를 키우고 있어요. 아이들이 잠들면, 그날의 이야기를 씁니다.",
-      es: "Soy Soojin — <strong>construyo producto en Bear Robotics</strong> y soy madre de dos. La mayoría de las noches, cuando se duermen, lo escribo."
+    hint: { en:"Scroll to sunset", ko:"스크롤해서 해 지우기", es:"Desliza hasta el atardecer" },
+    w_h: { en:"Written after bedtime.", ko:"아이들 재우고 씁니다.", es:"Escrito tras la hora de dormir." },
+    w_p: { en:"Usually around 10 p.m. Occasionally 2 a.m.", ko:"보통 밤 10시쯤. 가끔은 새벽 2시.", es:"Normalmente a las 10 p. m. A veces, a las 2 a. m." },
+    w1_k: { en:"Newsletter · English", ko:"뉴스레터 · 영어", es:"Boletín · Inglés" },
+    w1_p: { en:"Human thoughts on robots, and on raising humans. Every other week.", ko:"로봇에 대한, 그리고 사람을 키우는 일에 대한 사람의 생각. 격주로 보내요.", es:"Pensamientos humanos sobre robots, y sobre criar humanos. Cada dos semanas." },
+    w1_more: { en:"Read on Substack", ko:"Substack에서 읽기", es:"Leer en Substack" },
+    w2_k: { en:"Instagram · Korean", ko:"인스타그램 · 한국어", es:"Instagram · Coreano" },
+    w2_h: { en:"Robot news, hand-picked.", ko:"로봇 뉴스, 손으로 골랐어요.", es:"Noticias de robots, elegidas a mano." },
+    w2_p: { en:"Daily selected robot news. I do the scrolling, so you don't have to.", ko:"매일 고른 로봇 뉴스. 스크롤은 제가 할게요.", es:"Noticias de robots, cada día. Yo hago el scroll por ti." },
+    w2_more: { en:"Follow @notarobotsf", ko:"@notarobotsf 팔로우", es:"Seguir a @notarobotsf" },
+    n_h: { en:"Now shipping.", ko:"지금 만드는 것.", es:"Ahora mismo." },
+    n_p: { en:"What fills the hours between school drop-off and bedtime.", ko:"등원과 취침 사이를 채우는 일들.", es:"Lo que llena las horas entre dejar a los niños en el cole y dormirlos." },
+    n1_p: {
+      en:'Building robots that work alongside people. Product, full-time. <a href="https://www.bearrobotics.ai" target="_blank" rel="noopener">bearrobotics.ai</a>',
+      ko:'사람 곁에서 일하는 로봇을 만듭니다. 프로덕트, 풀타임. <a href="https://www.bearrobotics.ai" target="_blank" rel="noopener">bearrobotics.ai</a>',
+      es:'Robots que trabajan junto a las personas. Producto, a tiempo completo. <a href="https://www.bearrobotics.ai" target="_blank" rel="noopener">bearrobotics.ai</a>'
     },
-    chip1: { en: "San Francisco Bay Area", ko: "샌프란시스코 베이 에어리어", es: "Bahía de San Francisco" },
-    chip2: { en: "New posts biweekly", ko: "격주 연재 중", es: "Publico cada dos semanas" },
-    writing_eyebrow: { en: "Writing", ko: "글쓰기", es: "Escritura" },
-    writing_h2: {
-      en: 'New thoughts, <span class="serif-i">every</span> other week',
-      ko: '<span class="serif-i">격주로</span> 찾아오는 새로운 생각',
-      es: 'Ideas nuevas, <span class="serif-i">cada</span> dos semanas'
+    n2_h: { en:"Mentoring founders", ko:"창업자 멘토링", es:"Mentoría a fundadores" },
+    n2_p: { en:"Grad-student founders in the U.S. and Korea, through their universities. Mostly, I ask good questions.", ko:"미국과 한국의 대학원생 창업자들을 학교를 통해 만납니다. 주로 좋은 질문을 던지는 역할이에요.", es:"Fundadores de posgrado en EE. UU. y Corea, a través de sus universidades. Sobre todo, hago buenas preguntas." },
+    c_h: { en:"Let's talk.", ko:"이야기해요.", es:"Hablemos." },
+    c_p: { en:"My inbox is open. Response time beats any toddler's.", ko:"메일함은 열려 있어요. 답장은 우리 애들보다 빨라요.", es:"Mi bandeja está abierta. Respondo más rápido que cualquier niño pequeño." },
+    c1_k: { en:"Speaking", ko:"강연", es:"Charlas" },
+    c1_h: { en:"On stage, minus the bedtime stories.", ko:"자장가 말고, 강연도 해요.", es:"En el escenario, sin cuentos para dormir." },
+    c1_p: { en:"Robots, product, and working while parenting. For companies and schools.", ko:"로봇, 프로덕트, 그리고 아이 키우며 일하기. 기업과 학교 대상.", es:"Robots, producto y trabajar mientras crías. Para empresas y escuelas." },
+    c1_more: { en:"Invite me", ko:"강연 요청하기", es:"Invítame" },
+    c2_k: { en:"1:1 mentoring · Paid", ko:"1:1 멘토링 · 유료", es:"Mentoría 1:1 · De pago" },
+    c2_h: { en:"30 minutes. One hard question.", ko:"30분. 어려운 질문 하나.", es:"30 minutos. Una pregunta difícil." },
+    c2_p: { en:"For working professionals who want a second brain on a career call.", ko:"커리어 고민에 두 번째 머리가 필요한 직장인을 위해.", es:"Para profesionales que quieren una segunda opinión en una decisión de carrera." },
+    c2_more: { en:"Book a session", ko:"세션 신청하기", es:"Reservar sesión" },
+    c3_k: { en:"Students · Free", ko:"학생 · 무료", es:"Estudiantes · Gratis" },
+    c3_h: { en:"No question too small.", ko:"작은 질문도 환영해요.", es:"Ninguna pregunta es pequeña." },
+    c3_p: { en:"Email me anytime. I was a student once, and I still remember.", ko:"언제든 메일 주세요. 저도 학생이었고, 아직 기억해요.", es:"Escríbeme cuando quieras. También fui estudiante, y lo recuerdo." },
+    c3_more: { en:"Ask a question", ko:"질문하기", es:"Preguntar" },
+    li: {
+      en:'Prefer something more formal? Find me on <a href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">LinkedIn</a>.',
+      ko:'조금 더 격식 있게 만나고 싶다면 <a href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">LinkedIn</a>으로 오세요.',
+      es:'¿Prefieres algo más formal? Estoy en <a href="https://www.linkedin.com/in/soojinshim/" target="_blank" rel="noopener">LinkedIn</a>.'
     },
-    writing_p: {
-      en: "Robots, parenting, and the questions I'm still working out.",
-      ko: "로봇, 육아, 그리고 아직 답을 찾지 못한 질문들.",
-      es: "Robots, crianza, y las preguntas que todavía no resuelvo."
-    },
-    row1_tag: { en: "English", ko: "English", es: "Inglés" },
-    row1_title: { en: "Not a Robot Newsletter", ko: "Not a Robot Newsletter", es: "Not a Robot Newsletter" },
-    row1_sub: {
-      en: "Human thoughts on robots, parenting, and everything in between",
-      ko: "로봇을 만들지만, 결국 쓰는 건 사람 이야기입니다",
-      es: "Pensamientos humanos sobre robots, crianza, y todo lo que hay en medio"
-    },
-    row2_tag: { en: "Korean", ko: "한국어", es: "Coreano" },
-    row2_title: { en: "Instagram", ko: "인스타그램", es: "Instagram" },
-    row2_sub: {
-      en: "Daily selected robot news",
-      ko: "매일 골라 전하는 로봇 뉴스",
-      es: "Noticias de robots seleccionadas cada día"
-    },
-    now_eyebrow: { en: "Now", ko: "지금", es: "Ahora" },
-    now_h2: { en: "What I'm working on", ko: "지금 하고 있는 일", es: "En qué estoy trabajando" },
-    now_p: {
-      en: "How autonomous things enter our lives — and whether that's for the better.",
-      ko: "스스로 움직이는 것들이 우리 삶에 어떻게 들어오는지, 그리고 그게 정말 더 나은 방향인지.",
-      es: "Cómo las cosas autónomas entran en nuestras vidas — y si eso es para mejor."
-    },
-    now1_title: { en: "Bear Robotics", ko: "Bear Robotics", es: "Bear Robotics" },
-    now1_p: { en: "Product, full-time.", ko: "프로덕트 · 풀타임", es: "Producto, tiempo completo." },
-    now1_visit: { en: "Visit", ko: "바로가기", es: "Visitar" },
-    now2_title: { en: "Mentoring", ko: "멘토링", es: "Mentoría" },
-    now2_p: {
-      en: "Supporting graduate founders in the U.S. and Korea, through their schools.",
-      ko: "미국과 한국의 대학원생 창업자들을, 소속 학교를 통해 지원하고 있습니다.",
-      es: "Apoyo a fundadores de posgrado en Estados Unidos y Corea, a través de sus universidades."
-    },
-    contact_eyebrow: { en: "Contact", ko: "연락", es: "Contacto" },
-    contact_h2: {
-      en: 'Let\'s <span class="serif-i">talk</span>',
-      ko: '<span class="serif-i">이야기</span> 나눠요',
-      es: '<span class="serif-i">Hablemos</span>'
-    },
-    contact_p: {
-      en: "Talks on career growth, robotics, product, and working motherhood.",
-      ko: "커리어 성장, 로보틱스, 프로덕트, 그리고 일하는 엄마의 삶에 대해 이야기합니다.",
-      es: "Charlas sobre crecimiento profesional, robótica, producto, y maternidad y trabajo."
-    },
-    row3_tag: { en: "Speaking", ko: "강연", es: "Charlas" },
-    row3_title: { en: "Book a talk", ko: "강연 요청하기", es: "Reservar una charla" },
-    row3_sub: { en: "For companies &amp; schools", ko: "기업 및 학교 대상", es: "Para empresas y escuelas" },
-    row4_tag: { en: "Paid", ko: "유료", es: "Pago" },
-    row4_title: { en: "Mentorship, for professionals", ko: "멘토십 · 직장인 대상", es: "Mentoría, para profesionales" },
-    row4_sub: { en: "30 min · 1:1, by request", ko: "30분 · 1:1 · 요청 시 진행", es: "30 min · 1:1, a solicitud" },
-    row5_tag: { en: "Free", ko: "무료", es: "Gratis" },
-    row5_title: { en: "Mentorship, for students", ko: "멘토십 · 학생 대상", es: "Mentoría, para estudiantes" },
-    row5_sub: { en: "Email your question, anytime", ko: "언제든 이메일로 질문하세요", es: "Escríbeme tu pregunta, cuando quieras" },
-    footer_line: {
-      en: "If this helps someone move forward, that's enough.",
-      ko: "이 이야기가 누군가에게 도움이 된다면, 그걸로 충분합니다.",
-      es: "Si esto ayuda a alguien a avanzar, con eso basta."
-    }
+    f1: { en:"Designed after bedtime in the Bay Area. No robots were harmed.", ko:"베이 에어리어에서, 아이들 재우고 만들었어요. 다친 로봇은 없습니다.", es:"Diseñado tras la hora de dormir, en la Bahía. Ningún robot salió herido." }
   };
 
   function setLang(lang){
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el=>{
-      const entry = translations[el.getAttribute('data-i18n')];
-      if(entry && entry[lang] !== undefined) el.innerHTML = entry[lang];
+      const e = t[el.dataset.i18n];
+      if(e && e[lang] !== undefined) el.innerHTML = e[lang];
     });
     document.querySelectorAll('[data-href-en]').forEach(el=>{
-      const href = el.getAttribute('data-href-' + lang) || el.getAttribute('data-href-en');
-      if(href) el.setAttribute('href', href);
+      el.setAttribute('href', el.getAttribute('data-href-' + lang) || el.getAttribute('data-href-en'));
     });
-    document.querySelectorAll('.lang-toggle button').forEach(btn=>{
-      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-    });
+    document.querySelectorAll('.lang button').forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    try{ localStorage.setItem('lang', lang); }catch(_){}
   }
+  document.querySelectorAll('.lang button').forEach(b=> b.addEventListener('click', ()=> setLang(b.dataset.lang)));
+  try{ const saved = localStorage.getItem('lang'); if(saved && saved !== 'en') setLang(saved); }catch(_){}
 
-  document.querySelectorAll('.lang-toggle button').forEach(btn=>{
-    btn.addEventListener('click', ()=> setLang(btn.getAttribute('data-lang')));
-  });
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
+  const scene = document.querySelector('.scene');
+  const meta = document.querySelector('meta[name="theme-color"]');
+
+  // sunset progress: 0 at the top of the page, 1 once the scene has scrolled through
+  function progress(){
+    if(still) return 1;
+    const span = scene.offsetHeight - innerHeight;
+    return Math.min(1, Math.max(0, scrollY / (span * .85)));
+  }
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const p = progress();
+    root.style.setProperty('--p', p.toFixed(4));
+    const dark = p > .4;
+    root.style.setProperty('--lang-fg', dark ? '#F5F5F7' : '#1D1D1F');
+    if(meta) meta.setAttribute('content', dark ? '#0D1424' : '#DCEAF5');
+  }
+  addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener('resize', update);
+  update();
+
+  // stars: fine, slow twinkle; a shooting star now and then
+  (function(){
+    const c = document.querySelector('canvas.stars'); if(!c.getContext) return;
+    const ctx = c.getContext('2d');
+    let w, h, stars = [], shoot = null, last = 0;
+    function size(){
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      w = c.clientWidth; h = c.clientHeight;
+      c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      stars = Array.from({length:Math.round(w * h / 4200)}, ()=>({
+        x:Math.random()*w, y:Math.random()*h,
+        r:Math.random() < .1 ? 1.1 + Math.random()*.5 : .35 + Math.random()*.55,
+        a:.25 + Math.random()*.6, s:.3 + Math.random()*1.1, ph:Math.random()*6.28, warm:Math.random() < .07
+      }));
+    }
+    function draw(time){
+      ctx.clearRect(0,0,w,h);
+      for(const s of stars){
+        ctx.globalAlpha = s.a * (still ? 1 : .6 + .4*Math.sin(time/1000*s.s + s.ph));
+        ctx.fillStyle = s.warm ? '#FFD9A0' : '#FFFFFF';
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.283); ctx.fill();
+      }
+      if(!still){
+        if(!shoot && time - last > 7000 && Math.random() < .006){ shoot = {x:w*(.3 + Math.random()*.6), y:h*Math.random()*.4, life:0}; last = time; }
+        if(shoot){
+          const k = ++shoot.life / 50, x = shoot.x - k*260, y = shoot.y + k*110;
+          const g = ctx.createLinearGradient(x, y, x+110, y-46);
+          g.addColorStop(0,'rgba(255,255,255,.9)'); g.addColorStop(1,'rgba(255,255,255,0)');
+          ctx.globalAlpha = 1 - k; ctx.strokeStyle = g; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+110,y-46); ctx.stroke();
+          if(k >= 1) shoot = null;
+        }
+        requestAnimationFrame(draw);
+      }
+      ctx.globalAlpha = 1;
+    }
+    size(); addEventListener('resize', ()=>{ size(); if(still) draw(0); });
+    still ? draw(0) : requestAnimationFrame(draw);
+  })();
 </script>
-
 </body>
 </html>
